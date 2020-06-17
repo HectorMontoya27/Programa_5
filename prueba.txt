@@ -1,0 +1,25 @@
+ent x,b,c;
+real hola;
+dreal [5][6] se;
+
+estructura inicio
+  ent j;
+fin jh;
+
+def sin func (ent[] hg) inicio
+  x := ys + z;
+  mientras 5 > j hacer
+    j := j + 1;
+  fin
+  si verdadero entonces
+    mientras 5 > j hacer
+      j := j + 1;
+    fin
+  sino
+    h := x[5][3][2];
+    pablo := luis;
+  fin
+  si x >= e + t entonces
+    hj := 9 + 8;
+  fin
+fin
