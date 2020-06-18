@@ -41,7 +41,7 @@ extern int yylex();
 %token VERDADERO
 %token PUNCOM
 
-%token<base> TIPO
+%token<base> SIN ENT REAL DREAL CAR
 %token<dir> ID
 %token<dir> CARACTER
 %token<dir> CADENA
@@ -81,7 +81,11 @@ tipo_registro : ESTRUCTURA INICIO declaraciones FIN {};
 
 tipo : base tipo_arreglo {};
 
-base : TIPO {};
+base : SIN {}
+| ENT {}
+| REAL {}
+| DREAL {}
+| CAR {};
 
 tipo_arreglo : CORIZQ NUM CORDER tipo_arreglo {}
 | {};

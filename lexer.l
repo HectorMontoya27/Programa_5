@@ -22,11 +22,11 @@ espacios [ \t\n\r]+
 [eE][sS][tT][rR][uU][cC][tT][uU][rR][aA]  {return ESTRUCTURA;}
 [iI][nN][iI][cC][iI][oO]                  {return INICIO;}
 [Ff][Ii][Nn]                              {return FIN;}
-[Ee][Nn][Tt]                              {return TIPO;}
-[Rr][Ee][Aa][Ll]                          {return TIPO;}
-[Dd][Rr][Ee][Aa][Ll]                      {return TIPO;}
-[Cc][Aa][Rr]                              {return TIPO;}
-[Ss][Ii][Nn]                              {return TIPO;}
+[Ee][Nn][Tt]                              {return ENT;}
+[Rr][Ee][Aa][Ll]                          {return REAL;}
+[Dd][Rr][Ee][Aa][Ll]                      {return DREAL;}
+[Cc][Aa][Rr]                              {return CAR;}
+[Ss][Ii][Nn]                              {return SIN;}
 [Dd][Ee][Ff]                              {return DEF;}
 [Ss][Ii]                                  {return SI;}
 [Ee][Nn][Tt][Oo][Nn][Cc][Ee][Ss]          {return ENTONCES;}
