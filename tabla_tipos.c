@@ -77,7 +77,7 @@ Tipo* T_nuevo(char nombre[], int tam, int tipoBase, T_Simbolos *tabla){
     t->anterior = NULL;
     t->tipoBase = tipoBase;
     t->estructura = NULL;
-    if (tipoBase == -1) { t->estructura = tabla; }
+    if (tipoBase == -2) { t->estructura = tabla; }
     return t;
 }
 

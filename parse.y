@@ -19,8 +19,10 @@ extern int yylex();
 code *codigo;
 Pila_T_Tipos *PilaTT;
 Pila_T_Simbolos *PilaTS;
+T_Simbolos *tsGBL;
 int tipoGBL;
 int baseGBL;
+int tamTS_GBL;
 
 %}
 
@@ -92,7 +94,21 @@ declaraciones : tipo {tipoGBL = $1;} lista_var PYC declaraciones {}
 | tipo_registro lista_var PYC declaraciones {}
 | {};
 
-tipo_registro : ESTRUCTURA INICIO declaraciones FIN {};
+tipo_registro : ESTRUCTURA {
+      PTT_push(PilaTT,TT_nueva("Estructura"));
+      PTS_push(PilaTS,TS_nueva("Estructura"));
+      TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("car",1,-1,NULL));
+      TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("ent",4,-1,NULL));
+      TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("real",4,-1,NULL));
+      TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("dreal",8,-1,NULL));
+    } INICIO declaraciones FIN {
+      TS_imprimir(PilaTS->cabeza);
+      TT_imprimir(PilaTT->cabeza);
+      tsGBL = PTS_pop(PilaTS);
+      tsGBL->tt = PTT_pop(PilaTT);
+      tamTS_GBL = tsGBL->dirMax;
+      tipoGBL = TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("struct",tamTS_GBL,-2,tsGBL));
+    };
 
 tipo : base { baseGBL = $1; } tipo_arreglo { $$ = $3; };
 
@@ -116,16 +132,16 @@ tipo_arreglo : CORIZQ NUM CORDER tipo_arreglo {
 | { $$ = baseGBL; };
 
 lista_var : ID A {
-    if (existeID(PilaTS->inicio,$1) == -1) {
-        TS_nuevoRegistro(getTablaGlobal(PilaTT),PilaTS->inicio,S_nuevo($1,tipoGBL,"var",NULL));
+    if (existeID(PilaTS->cabeza,$1) == -1) {
+        TS_nuevoRegistro(PilaTT->cabeza,PilaTS->cabeza,S_nuevo($1,tipoGBL,"var",NULL));
     } else {
         yyerror("Ya se declaró la variable");
     }
 };
 
 A : COMA ID A {
-  if (existeID(PilaTS->inicio,$2) == -1) {
-      TS_nuevoRegistro(getTablaGlobal(PilaTT),PilaTS->inicio,S_nuevo($2,tipoGBL,"var",NULL));
+  if (existeID(PilaTS->cabeza,$2) == -1) {
+      TS_nuevoRegistro(PilaTT->cabeza,PilaTS->cabeza,S_nuevo($2,tipoGBL,"var",NULL));
   } else {
       yyerror("Ya se declaró la variable");
   }

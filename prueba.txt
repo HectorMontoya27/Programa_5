@@ -2,9 +2,9 @@ ent x,b,c;
 real hola;
 dreal [5][6] se;
 
-/*estructura inicio
+estructura inicio
   ent j;
-fin jh;*/
+fin jh;
 
 def sin func (ent[] hg) inicio
   x := ys + z;
