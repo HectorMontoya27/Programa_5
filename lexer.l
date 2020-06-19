@@ -11,7 +11,6 @@ cadena \“[a-zA-Z][a-zA-Z]+\”
 asignacion ":="
 entero [0-9]+
 real ([0-9]*[eE]-?[0-9]+)|([0-9]+"."[0-9]+)
-num {entero}|{real}
 caracter ‘[a-zA-Z]’
 operador_relacional ">"|"<"|">="|"<="|"="|"<>"
 comentarios "/*"([^*/])*"*/"
@@ -45,10 +44,24 @@ espacios [ \t\n\r]+
 [Nn][Oo]                                  {return NO;}
 [Vv][Ee][Rr][Dd][Aa][Dd][Ee][Rr][Oo]      {return VERDADERO;}
 [Ff][Aa][Ll][Ss][Oo]                      {return FALSO;}
-{identificador}                           {return ID;}
+{identificador}                           {
+                                            strcpy(yylval.dir,yytext);
+                                            return ID;
+                                          }
 {cadena}                                  {return CADENA;}
 {caracter}                                {return CARACTER;}
-{num}                                     {return NUM;}
+{entero}                                  {
+                                            yylval.numero.tipo = 1;
+                                            yylval.numero.num = atoi(yytext);
+                                            strcpy(yylval.numero.dir, yytext);
+                                            return NUM;
+                                          }
+{real}                                    {
+                                            yylval.numero.tipo = 2;
+                                            yylval.numero.num = atof(yytext);
+                                            strcpy(yylval.numero.dir, yytext);
+                                            return NUM;
+                                          }
 {asignacion}                              {return ASIG;}
 {operador_relacional}                     {return OPERADOR_RELACIONAL;}
 "+"|"-"                                   {return SUM_RES;}

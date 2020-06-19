@@ -10,13 +10,28 @@
 #include "cuadruplas.h"
 #include "backpatch.h"
 
+void inicializar();
+void finalizar();
+
 void yyerror(char *s);
 extern int yylex();
+
+code *codigo;
+Pila_T_Tipos *PilaTT;
+Pila_T_Simbolos *PilaTS;
+int tipoGBL;
+int baseGBL;
+
 %}
 
 %union{
-  char dir[64];
+  char dir[32];
   int base;
+  struct {
+      int tipo;
+      int num;
+      char dir[10];
+  } numero;
 }
 
 %token PYC
@@ -45,7 +60,7 @@ extern int yylex();
 %token<dir> ID
 %token<dir> CARACTER
 %token<dir> CADENA
-%token<dir> NUM
+%token<numero> NUM
 
 %token COMA
 %right ASIG
@@ -62,37 +77,59 @@ extern int yylex();
 %nonassoc SIT
 %nonassoc SINO
 /*No terminales*/
-%type<dir> programa declaraciones tipo_registro tipo tipo_arreglo lista_var arreglo funciones argumentos lista_arg
+%type<dir> programa declaraciones tipo_registro lista_var arreglo funciones argumentos lista_arg
 %type<dir> arg tipo_arg param_arr sentencias sentencia casos predeterminado e_bool relacional expresion variable dato_est_sim
 %type<dir> parametros lista_param variable_comp A
-%type<base> base
+%type<base> base tipo_arreglo tipo
 /*Inicio*/
 %start programa
 
 %%
 
-programa : declaraciones funciones {  printf("Aceptado\n"); };
+programa : { inicializar(); } declaraciones funciones {  printf("Aceptado\n"); finalizar(); };
 
-declaraciones : tipo lista_var PYC declaraciones {}
+declaraciones : tipo {tipoGBL = $1;} lista_var PYC declaraciones {}
 | tipo_registro lista_var PYC declaraciones {}
 | {};
 
 tipo_registro : ESTRUCTURA INICIO declaraciones FIN {};
 
-tipo : base tipo_arreglo {};
+tipo : base { baseGBL = $1; } tipo_arreglo { $$ = $3; };
 
-base : SIN {}
-| ENT {}
-| REAL {}
-| DREAL {}
-| CAR {};
+base : SIN { $$ = -1; }
+| ENT { $$ = 1; }
+| REAL { $$ = 2; }
+| DREAL { $$ = 3; }
+| CAR { $$ = 0; };
 
-tipo_arreglo : CORIZQ NUM CORDER tipo_arreglo {}
-| {};
+tipo_arreglo : CORIZQ NUM CORDER tipo_arreglo {
+    if ($2.tipo = 1) {
+        if ($2.num > 0){
+          $$ = TT_nuevoRegistro(getTablaGlobal(PilaTT),T_nuevo("arreglo",$2.num*TT_getTam(getTablaGlobal(PilaTT),$4),$4,NULL));
+        } else {
+          yyerror("El tamano del arreglo no es valido");
+        }
+    } else {
+        yyerror("El tamaño del arreglo no es un número entero");
+    }
+ }
+| { $$ = baseGBL; };
 
-lista_var : ID A {};
+lista_var : ID A {
+    if (existeID(PilaTS->inicio,$1) == -1) {
+        TS_nuevoRegistro(getTablaGlobal(PilaTT),PilaTS->inicio,S_nuevo($1,tipoGBL,"var",NULL));
+    } else {
+        yyerror("Ya se declaró la variable");
+    }
+};
 
-A : COMA ID A {}
+A : COMA ID A {
+  if (existeID(PilaTS->inicio,$2) == -1) {
+      TS_nuevoRegistro(getTablaGlobal(PilaTT),PilaTS->inicio,S_nuevo($2,tipoGBL,"var",NULL));
+  } else {
+      yyerror("Ya se declaró la variable");
+  }
+}
 |  {};
 
 funciones : DEF tipo ID LPAR argumentos RPAR INICIO declaraciones sentencias FIN funciones {}
@@ -178,4 +215,37 @@ lista_param : lista_param COMA expresion {}
 */
 void yyerror(char *s){
     printf("Error sintactico. %s\n",s);
+}
+
+/*
+--Nombre Funcion:
+--Descripcion:
+--Autor:
+--Fecha de creacion:
+*/
+void inicializar(){
+    codigo = crearCodigo();
+    PilaTS = PTS_nueva();
+    PilaTT = PTT_nueva();
+    PTT_push(PilaTT,TT_nueva("Global"));
+    PTS_push(PilaTS,TS_nueva("Global"));
+    TT_nuevoRegistro(getTablaGlobal(PilaTT),T_nuevo("car",1,-1,NULL));
+    TT_nuevoRegistro(getTablaGlobal(PilaTT),T_nuevo("ent",4,-1,NULL));
+    TT_nuevoRegistro(getTablaGlobal(PilaTT),T_nuevo("real",4,-1,NULL));
+    TT_nuevoRegistro(getTablaGlobal(PilaTT),T_nuevo("dreal",8,-1,NULL));
+}
+
+/*
+--Nombre Funcion:
+--Descripcion:
+--Autor:
+--Fecha de creacion:
+*/
+void finalizar(){
+    PTT_imprimir(PilaTT);
+    PTS_imprimir(PilaTS);
+    imprimirCodigo(codigo);
+    PTS_eliminar(PilaTS);
+    PTT_eliminar(PilaTT);
+    eliminarCodigo(codigo);
 }

@@ -34,7 +34,7 @@ void imprimirListaIndice(listaIndice *lista);                         //Lista
 void agregarIndice(listaIndice *lista, Indice *indice);               //Lista
 listaIndice* combinar(listaIndice *lista1, listaIndice *lista2);      //Lista
 void backpatch(code *codigo, listaIndice *lista, char *label);        //Lista
-void nuevaTemp(char *t);                                                   //Lista
+void nuevaTemp(char *t);                                              //Lista
 void nuevaEtiqueta(char *dire);                                       //Lista
 
 #endif

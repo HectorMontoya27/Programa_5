@@ -108,6 +108,9 @@ void PTT_push(Pila_T_Tipos *pila, T_Tipos *tabla){
 --Descripcion: Se agrega una registro de tipo a una tabla de tipos
 --Autor: Héctor Montoya Pérez
 --Fecha de creacion: 27 Mayo 2020
+--Fecha de modificacion: 19 Junio
+--Autor modificacion: Héctor Montoya Pérez
+--Descripcion de modificacion: Se arreglo el numero de retorno
 */
 int TT_nuevoRegistro(T_Tipos *tabla, Tipo *t){
     if (tabla == NULL) { printf("ERROR: No existe tabla\n"); return -1; }
@@ -124,7 +127,7 @@ int TT_nuevoRegistro(T_Tipos *tabla, Tipo *t){
         t->id = tabla->num;
         tabla->num = tabla->num + 1;
     }
-    return tabla->num;
+    return tabla->num - 1;
 }
 
 /*

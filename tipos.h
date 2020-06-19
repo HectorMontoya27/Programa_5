@@ -4,8 +4,8 @@
 
 /* -------------------------Declaracion de Funciones -------------------------- */
 
-char* ampliar(char *dir, int t1, int t2, code *codigo);         //Lista
-char* reducir(char *dir, int t1, int t2, code *codigo);         //Lista
+void ampliar(char *res, char *dir, int t1, int t2, code *codigo);         //Lista
+void reducir(char *res, char *dir, int t1, int t2, code *codigo);         //Lista
 int max(int t1, int t2);                                        //Lista
 int min(int t1, int t2);                                        //Lista
 

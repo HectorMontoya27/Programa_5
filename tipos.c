@@ -35,31 +35,31 @@
 --Autor modificacion:
 --Descripcion de modificacion:
 */
-char *ampliar(char *dir, int t1, int t2, code *codigo){
+void ampliar(char *res, char *dir, int t1, int t2, code *codigo){
     if (t1 != t2){
         int aux = max(t1, t2);
-        if ( aux == -2){ return NULL; }
-        if ( aux == t1){ return dir; }
-        char *t = malloc(sizeof(char) * 10);
-        nuevaTemp(t);
-        switch (aux){
-            case 1:
-                agregarCuadrupla(codigo,crearCuadrupla("(ent)", dir ,"-", t));
-                break;
-            case 2:
-                agregarCuadrupla(codigo,crearCuadrupla("(real)", dir ,"-", t));
-                break;
-            case 3:
-                agregarCuadrupla(codigo,crearCuadrupla("(dreal)", dir ,"-", t));
-                break;
-            default:
-                strcpy(t,"");
-                break;
+        if ( aux == -2){ res = NULL; }
+        if ( aux == t1){ strcpy(res,dir); }
+        else {
+            nuevaTemp(res);
+            switch (aux){
+                case 1:
+                    agregarCuadrupla(codigo,crearCuadrupla("(ent)", dir ,"-", res));
+                    break;
+                case 2:
+                    agregarCuadrupla(codigo,crearCuadrupla("(real)", dir ,"-", res));
+                    break;
+                case 3:
+                    agregarCuadrupla(codigo,crearCuadrupla("(dreal)", dir ,"-", res));
+                    break;
+                default:
+                    res = NULL;
+                    break;
+            }
         }
-        return t;
     }
     else{
-        return dir;
+        strcpy(res,dir);
     }
 }
 
@@ -73,31 +73,30 @@ char *ampliar(char *dir, int t1, int t2, code *codigo){
 --Autor: Soto Vázquez Patricia
 --Fecha de creacion: 14/06/2020
 */
-char *reducir(char *dir, int t1, int t2, code *codigo){
+void reducir(char *res, char *dir, int t1, int t2, code *codigo){
     if (t1 != t2){
         int aux = min(t1, t2);
-        if ( aux == -2){ return NULL; }
-        if ( aux == t1){ return dir; }
-        char *t = malloc(sizeof(char) * 5);
-        nuevaTemp(t);
+        if ( aux == -2 ){ res = NULL; }
+        if ( aux == t1 ){ strcpy(res,dir); }
+        else {
+        nuevaTemp(res);
         switch (aux){
             case 0:
-                agregarCuadrupla(codigo,crearCuadrupla("(car)", dir ,"-", t));
+                agregarCuadrupla(codigo,crearCuadrupla("(car)", dir ,"-", res));
                 break;
             case 1:
-                agregarCuadrupla(codigo,crearCuadrupla("(ent)", dir ,"-", t));
+                agregarCuadrupla(codigo,crearCuadrupla("(ent)", dir ,"-", res));
                 break;
             case 2:
-                agregarCuadrupla(codigo,crearCuadrupla("(real)", dir ,"-", t));
+                agregarCuadrupla(codigo,crearCuadrupla("(real)", dir ,"-", res));
                 break;
             default:
-                strcpy(t,"");
+                res = NULL;
                 break;
+            }
         }
-        return t;
-    }
-    else{
-        return dir;
+    } else {
+        strcpy(res,dir);
     }
 }
 
