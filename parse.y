@@ -23,17 +23,40 @@ T_Simbolos *tsGBL;
 int tipoGBL;
 int baseGBL;
 int tamTS_GBL;
+listaArg *listaRET;
+char GBLid[20];
 
 %}
 
 %union{
   char dir[32];
   int base;
+
   struct {
       int tipo;
       int num;
-      char dir[10];
+      char dir[20];
   } numero;
+
+  struct {
+      int num;
+      struct LIST_ARG *lista;
+  } lista;
+
+  struct {
+      char dir[20];
+      char base[20];
+      int des;
+      int tipo;
+      int estructura;
+      struct T_SIMBOLOS *tabla;
+  } variable;
+
+  struct {
+      int tipo;
+      char dir[20];
+      int valor;
+  }expresion;
 }
 
 %token PYC
@@ -79,10 +102,14 @@ int tamTS_GBL;
 %nonassoc SIT
 %nonassoc SINO
 /*No terminales*/
-%type<dir> programa declaraciones tipo_registro lista_var arreglo funciones argumentos lista_arg
-%type<dir> arg tipo_arg param_arr sentencias sentencia casos predeterminado e_bool relacional expresion variable dato_est_sim
-%type<dir> parametros lista_param variable_comp A
-%type<base> base tipo_arreglo tipo
+%type<dir> programa declaraciones tipo_registro lista_var funciones
+%type<dir> sentencias sentencia casos predeterminado e_bool relacional
+%type<dir> parametros lista_param A
+%type<base> base tipo_arreglo tipo tipo_arg arg param_arr
+%type<lista> argumentos lista_arg
+%type<variable> variable variable_comp arreglo dato_est_sim
+%type<expresion> expresion
+
 /*Inicio*/
 %start programa
 
@@ -101,7 +128,9 @@ tipo_registro : ESTRUCTURA {
       TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("ent",4,-1,NULL));
       TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("real",4,-1,NULL));
       TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("dreal",8,-1,NULL));
+
     } INICIO declaraciones FIN {
+
       TS_imprimir(PilaTS->cabeza);
       TT_imprimir(PilaTT->cabeza);
       tsGBL = PTS_pop(PilaTS);
@@ -121,7 +150,7 @@ base : SIN { $$ = -1; }
 tipo_arreglo : CORIZQ NUM CORDER tipo_arreglo {
     if ($2.tipo = 1) {
         if ($2.num > 0){
-          $$ = TT_nuevoRegistro(getTablaGlobal(PilaTT),T_nuevo("arreglo",$2.num*TT_getTam(getTablaGlobal(PilaTT),$4),$4,NULL));
+          $$ = TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("arreglo",$2.num*TT_getTam(getTablaGlobal(PilaTT),$4),$4,NULL));
         } else {
           yyerror("El tamano del arreglo no es valido");
         }
@@ -148,21 +177,47 @@ A : COMA ID A {
 }
 |  {};
 
-funciones : DEF tipo ID LPAR argumentos RPAR INICIO declaraciones sentencias FIN funciones {}
+funciones : DEF tipo ID {
+          if (existeID(PilaTS->cabeza,$3) == -1) {
+              PTS_push(PilaTS,TS_nueva("Funcion"));
+              PTT_push(PilaTT,TT_nueva("Funcion"));
+              copiarGlobalTT(PilaTT);
+              copiarGlobalTS(PilaTS);
+              PilaTS->cabeza->tt = PilaTT->cabeza;
+              listaRET = crearListaArg();
+          } else {
+              yyerror("Ya se declaro la variable");
+          }
+
+      } LPAR argumentos RPAR INICIO declaraciones sentencias FIN {
+          TS_imprimir(PilaTS->cabeza);
+          TT_imprimir(PilaTT->cabeza);
+          TS_eliminar(PTS_pop( PilaTS ));
+          TT_eliminar(PTT_pop( PilaTT ));
+          borrarlistaArg(listaRET);
+
+      } funciones {}
 | {};
 
-argumentos : lista_arg {}
-| SIN {};
+argumentos : lista_arg { $$.lista = $1.lista; $$.num = $1.num; }
+| SIN { $$.lista = NULL; $$.num = 0; };
 
-lista_arg : lista_arg COMA arg {}
-| arg {};
+lista_arg : lista_arg COMA arg { $$.lista = $1.lista; $$.num = $1.num + 1; agregarArg($$.lista,$3); }
+| arg { $$.lista = crearListaArg(); agregarArg($$.lista,$1); $$.num = 1; };
 
-arg : tipo_arg ID {};
+arg : tipo_arg ID {
+      if (existeID(PilaTS->cabeza,$2) == -1) {
+          TS_nuevoRegistro(PilaTT->cabeza, PilaTS->cabeza, S_nuevo($2,$1,"var",NULL));
+          $$ = $1;
+      } else {
+          yyerror("Ya se declaro la variable");
+      }
+ };
 
-tipo_arg : base param_arr {};
+tipo_arg : base { baseGBL = $1; } param_arr { $$ = $3; };
 
-param_arr : CORIZQ CORDER param_arr {}
-| {};
+param_arr : CORIZQ CORDER param_arr { $$ = TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("arreglo",2,-1,NULL)); }
+| { $$ = baseGBL; };
 
 sentencias : sentencias sentencia {}
 | {};
@@ -174,7 +229,11 @@ sentencia : SI e_bool ENTONCES sentencias FIN {}
 | SEGUN LPAR variable RPAR HACER casos predeterminado FIN {}
 | variable ASIG expresion PYC {}
 | ESCRIBIR expresion PYC {}
-| LEER variable PYC {}
+| LEER variable PYC {
+    char *id = (char *)malloc(sizeof(char)*20);
+    strcpy(id,$2.dir);
+    agregarCuadrupla(codigo,crearCuadrupla("read",id,"-","-"));
+}
 | DEVOLVER PYC {}
 | DEVOLVER expresion PYC {}
 | TERMINAR PYC {}
@@ -200,20 +259,74 @@ expresion : expresion SUM_RES expresion {}
 | expresion MUL_DIV_MOD expresion {}
 | LPAR expresion RPAR {}
 | variable {}
-| NUM {}
+| NUM { strcpy($$.dir,$1.dir); $$.valor = $1.num; }
 | CADENA {}
 | CARACTER {};
 
-variable : ID variable_comp {};
+variable : ID {
+    if (existeID(PilaTS->cabeza,$1) != -1) { strcpy(GBLid,$1);
+    } else { yyerror("No se ha declarado variable"); }
 
-variable_comp : dato_est_sim {}
-| arreglo {}
+} variable_comp {
+    if ($3.estructura == 1) {
+        char tmp[10], tmp2[20];
+        nuevaTemp(tmp);
+        strcpy($$.dir,tmp);
+        $$.tipo = $3.tipo;
+        sprintf(tmp2,"%s[%d]",$1,$3.des);
+        agregarCuadrupla(codigo,crearCuadrupla("=",tmp2,"-",tmp));
+        strcpy($$.base,$1);
+        $$.estructura = 1;
+        $$.des = $3.des;
+    } else {
+        strcpy($$.dir,$1);
+        $$.tipo = getTipo(PilaTS->cabeza,$1);
+        $$.estructura = 0;
+    }
+};
+
+variable_comp : dato_est_sim {
+    $$.tipo = $1.tipo;
+    $$.des = $1.des;
+    $$.estructura = $1.estructura;
+}
+| arreglo {
+    $$.tipo = $1.tipo;
+    $$.des = $1.des;
+    $$.estructura = 1;
+}
 | LPAR parametros RPAR {};
 
 dato_est_sim : dato_est_sim PUNTO ID {}
-| {};
+| {
+      int tmp6 = getTipo(PilaTS->cabeza,GBLid);
+      if (strcmp(getNombre_TT(PilaTT->cabeza,tmp6),"struct") == 0) {
+          $$.estructura = 1;
+          $$.tabla = getTS(PilaTT->cabeza,tmp6);
+          $$.des = 0;
+      } else {
+          $$.estructura = 0;
+          $$.tipo = tmp6;
+      }
+};
 
-arreglo : CORIZQ expresion CORDER {}
+arreglo : CORIZQ expresion CORDER {
+      $$.tipo = getTipo(PilaTS->cabeza,GBLid);
+      if (strcmp(getNombre_TT(PilaTT->cabeza,$$.tipo),"arreglo") == 0) {
+          printf("holaaaaaaaa\n");
+          if ($2.tipo == 1) {
+              int tmp3 = getTipoBase(PilaTT->cabeza,$$.tipo);
+              int tam = TT_getTam(PilaTT->cabeza,tmp3);
+              char tmp4[20], tmp5[10], tmp7[10];
+              nuevaTemp(tmp4);
+              strcpy($$.dir,tmp4);
+              sprintf(tmp5,"%d",tam);
+              strcpy(tmp7,$2.dir);
+              agregarCuadrupla(codigo,crearCuadrupla("*",tmp7,tmp5,tmp4));
+              $$.des = $2.valor * atoi(tmp5);
+          } else { yyerror("El numero del arreglo no es un numero entero"); }
+      } else { yyerror("La variable asociada no es de tipo arreglo"); }
+}
 | CORIZQ expresion CORDER arreglo {};
 
 parametros : lista_param {}
@@ -249,6 +362,7 @@ void inicializar(){
     TT_nuevoRegistro(getTablaGlobal(PilaTT),T_nuevo("ent",4,-1,NULL));
     TT_nuevoRegistro(getTablaGlobal(PilaTT),T_nuevo("real",4,-1,NULL));
     TT_nuevoRegistro(getTablaGlobal(PilaTT),T_nuevo("dreal",8,-1,NULL));
+    PilaTS->inicio->tt = PilaTT->inicio;
 }
 
 /*

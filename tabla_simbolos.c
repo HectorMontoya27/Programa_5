@@ -378,3 +378,23 @@ char* getVar_TS(T_Simbolos *st, char id[]){
     }
     return NULL;
 }
+
+/*
+--Nombre Funcion:
+--Descripcion:
+--Autor:
+--Fecha de creacion:
+*/
+void copiarGlobalTS(Pila_T_Simbolos *pila){
+    if (pila != NULL) {
+        T_Simbolos *ts1, *ts2;
+        Simbolo *sim;
+        ts1 = pila->inicio;
+        ts2 = pila->cabeza;
+        sim = ts1->inicio;
+        while (sim != NULL) {
+            TS_nuevoRegistro(pila->inicio->tt,ts2,S_nuevo(sim->id,sim->tipo,sim->var,sim->lista));
+            sim = sim->siguente;
+        }
+    }
+}

@@ -32,79 +32,87 @@
   19  A : COMA ID A
   20    |
 
-  21  funciones : DEF tipo ID LPAR argumentos RPAR INICIO declaraciones sentencias FIN funciones
-  22            |
+  21  $$5 :
 
-  23  argumentos : lista_arg
-  24             | SIN
+  22  $$6 :
 
-  25  lista_arg : lista_arg COMA arg
-  26            | arg
+  23  funciones : DEF tipo ID $$5 LPAR argumentos RPAR INICIO declaraciones sentencias FIN $$6 funciones
+  24            |
 
-  27  arg : tipo_arg ID
+  25  argumentos : lista_arg
+  26             | SIN
 
-  28  tipo_arg : base param_arr
+  27  lista_arg : lista_arg COMA arg
+  28            | arg
 
-  29  param_arr : CORIZQ CORDER param_arr
-  30            |
+  29  arg : tipo_arg ID
 
-  31  sentencias : sentencias sentencia
-  32             |
+  30  $$7 :
 
-  33  sentencia : SI e_bool ENTONCES sentencias FIN
-  34            | SI e_bool ENTONCES sentencias SINO sentencias FIN
-  35            | MIENTRAS e_bool HACER sentencias FIN
-  36            | HACER sentencias MIENTRAS e_bool PYC
-  37            | SEGUN LPAR variable RPAR HACER casos predeterminado FIN
-  38            | variable ASIG expresion PYC
-  39            | ESCRIBIR expresion PYC
-  40            | LEER variable PYC
-  41            | DEVOLVER PYC
-  42            | DEVOLVER expresion PYC
-  43            | TERMINAR PYC
-  44            | INICIO sentencias FIN
+  31  tipo_arg : base $$7 param_arr
 
-  45  casos : CASO NUM DOSP sentencias casos
-  46        | CASO NUM DOSP sentencias
+  32  param_arr : CORIZQ CORDER param_arr
+  33            |
 
-  47  predeterminado : PRED DOSP sentencias
-  48                 |
+  34  sentencias : sentencias sentencia
+  35             |
 
-  49  e_bool : e_bool O e_bool
-  50         | e_bool Y e_bool
-  51         | NO e_bool
-  52         | relacional
-  53         | VERDADERO
-  54         | FALSO
+  36  sentencia : SI e_bool ENTONCES sentencias FIN
+  37            | SI e_bool ENTONCES sentencias SINO sentencias FIN
+  38            | MIENTRAS e_bool HACER sentencias FIN
+  39            | HACER sentencias MIENTRAS e_bool PYC
+  40            | SEGUN LPAR variable RPAR HACER casos predeterminado FIN
+  41            | variable ASIG expresion PYC
+  42            | ESCRIBIR expresion PYC
+  43            | LEER variable PYC
+  44            | DEVOLVER PYC
+  45            | DEVOLVER expresion PYC
+  46            | TERMINAR PYC
+  47            | INICIO sentencias FIN
 
-  55  relacional : relacional OPERADOR_RELACIONAL relacional
-  56             | expresion
+  48  casos : CASO NUM DOSP sentencias casos
+  49        | CASO NUM DOSP sentencias
 
-  57  expresion : expresion SUM_RES expresion
-  58            | expresion MUL_DIV_MOD expresion
-  59            | LPAR expresion RPAR
-  60            | variable
-  61            | NUM
-  62            | CADENA
-  63            | CARACTER
+  50  predeterminado : PRED DOSP sentencias
+  51                 |
 
-  64  variable : ID variable_comp
+  52  e_bool : e_bool O e_bool
+  53         | e_bool Y e_bool
+  54         | NO e_bool
+  55         | relacional
+  56         | VERDADERO
+  57         | FALSO
 
-  65  variable_comp : dato_est_sim
-  66                | arreglo
-  67                | LPAR parametros RPAR
+  58  relacional : relacional OPERADOR_RELACIONAL relacional
+  59             | expresion
 
-  68  dato_est_sim : dato_est_sim PUNTO ID
-  69               |
+  60  expresion : expresion SUM_RES expresion
+  61            | expresion MUL_DIV_MOD expresion
+  62            | LPAR expresion RPAR
+  63            | variable
+  64            | NUM
+  65            | CADENA
+  66            | CARACTER
 
-  70  arreglo : CORIZQ expresion CORDER
-  71          | CORIZQ expresion CORDER arreglo
+  67  $$8 :
 
-  72  parametros : lista_param
-  73             |
+  68  variable : ID $$8 variable_comp
 
-  74  lista_param : lista_param COMA expresion
-  75              | expresion
+  69  variable_comp : dato_est_sim
+  70                | arreglo
+  71                | LPAR parametros RPAR
+
+  72  dato_est_sim : dato_est_sim PUNTO ID
+  73               |
+
+  74  arreglo : CORIZQ expresion CORDER
+  75          | CORIZQ expresion CORDER arreglo
+
+  76  parametros : lista_param
+  77             |
+
+  78  lista_param : lista_param COMA expresion
+  79              | expresion
 
 state 0
 	$accept : . programa $end  (0)
@@ -182,10 +190,10 @@ state 8
 
 state 9
 	programa : $$1 declaraciones . funciones  (2)
-	funciones : .  (22)
+	funciones : .  (24)
 
 	DEF  shift 14
-	$end  reduce 22
+	$end  reduce 24
 
 	funciones  goto 15
 
@@ -225,7 +233,7 @@ state 13
 
 
 state 14
-	funciones : DEF . tipo ID LPAR argumentos RPAR INICIO declaraciones sentencias FIN funciones  (21)
+	funciones : DEF . tipo ID $$5 LPAR argumentos RPAR INICIO declaraciones sentencias FIN $$6 funciones  (23)
 
 	SIN  shift 4
 	ENT  shift 5
@@ -299,7 +307,7 @@ state 20
 
 
 state 21
-	funciones : DEF tipo . ID LPAR argumentos RPAR INICIO declaraciones sentencias FIN funciones  (21)
+	funciones : DEF tipo . ID $$5 LPAR argumentos RPAR INICIO declaraciones sentencias FIN $$6 funciones  (23)
 
 	ID  shift 29
 	.  error
@@ -376,10 +384,12 @@ state 28
 
 
 state 29
-	funciones : DEF tipo ID . LPAR argumentos RPAR INICIO declaraciones sentencias FIN funciones  (21)
+	funciones : DEF tipo ID . $$5 LPAR argumentos RPAR INICIO declaraciones sentencias FIN $$6 funciones  (23)
+	$$5 : .  (21)
 
-	LPAR  shift 35
-	.  error
+	.  reduce 21
+
+	$$5  goto 35
 
 
 state 30
@@ -442,20 +452,10 @@ state 34
 
 
 state 35
-	funciones : DEF tipo ID LPAR . argumentos RPAR INICIO declaraciones sentencias FIN funciones  (21)
+	funciones : DEF tipo ID $$5 . LPAR argumentos RPAR INICIO declaraciones sentencias FIN $$6 funciones  (23)
 
-	SIN  shift 39
-	ENT  shift 5
-	REAL  shift 6
-	DREAL  shift 7
-	CAR  shift 8
+	LPAR  shift 39
 	.  error
-
-	argumentos  goto 40
-	lista_arg  goto 41
-	arg  goto 42
-	tipo_arg  goto 43
-	base  goto 44
 
 
 state 36
@@ -471,7 +471,7 @@ state 37
 	CORIZQ  shift 25
 	ID  reduce 17
 
-	tipo_arreglo  goto 45
+	tipo_arreglo  goto 40
 
 
 state 38
@@ -481,67 +481,99 @@ state 38
 
 
 state 39
-	base : SIN .  (11)
-	argumentos : SIN .  (24)
+	funciones : DEF tipo ID $$5 LPAR . argumentos RPAR INICIO declaraciones sentencias FIN $$6 funciones  (23)
 
-	ID  reduce 11
-	CORIZQ  reduce 11
-	RPAR  reduce 24
+	SIN  shift 41
+	ENT  shift 5
+	REAL  shift 6
+	DREAL  shift 7
+	CAR  shift 8
+	.  error
+
+	base  goto 42
+	tipo_arg  goto 43
+	arg  goto 44
+	argumentos  goto 45
+	lista_arg  goto 46
 
 
 state 40
-	funciones : DEF tipo ID LPAR argumentos . RPAR INICIO declaraciones sentencias FIN funciones  (21)
+	tipo_arreglo : CORIZQ NUM CORDER tipo_arreglo .  (16)
 
-	RPAR  shift 46
-	.  error
+	.  reduce 16
 
 
 state 41
-	argumentos : lista_arg .  (23)
-	lista_arg : lista_arg . COMA arg  (25)
+	base : SIN .  (11)
+	argumentos : SIN .  (26)
 
-	COMA  shift 47
-	RPAR  reduce 23
+	ID  reduce 11
+	CORIZQ  reduce 11
+	RPAR  reduce 26
 
 
 state 42
-	lista_arg : arg .  (26)
+	tipo_arg : base . $$7 param_arr  (31)
+	$$7 : .  (30)
 
-	.  reduce 26
+	.  reduce 30
+
+	$$7  goto 47
 
 
 state 43
-	arg : tipo_arg . ID  (27)
+	arg : tipo_arg . ID  (29)
 
 	ID  shift 48
 	.  error
 
 
 state 44
-	tipo_arg : base . param_arr  (28)
-	param_arr : .  (30)
+	lista_arg : arg .  (28)
 
-	CORIZQ  shift 49
-	ID  reduce 30
-
-	param_arr  goto 50
+	.  reduce 28
 
 
 state 45
-	tipo_arreglo : CORIZQ NUM CORDER tipo_arreglo .  (16)
+	funciones : DEF tipo ID $$5 LPAR argumentos . RPAR INICIO declaraciones sentencias FIN $$6 funciones  (23)
 
-	.  reduce 16
-
-
-state 46
-	funciones : DEF tipo ID LPAR argumentos RPAR . INICIO declaraciones sentencias FIN funciones  (21)
-
-	INICIO  shift 51
+	RPAR  shift 49
 	.  error
 
 
+state 46
+	argumentos : lista_arg .  (25)
+	lista_arg : lista_arg . COMA arg  (27)
+
+	COMA  shift 50
+	RPAR  reduce 25
+
+
 state 47
-	lista_arg : lista_arg COMA . arg  (25)
+	tipo_arg : base $$7 . param_arr  (31)
+	param_arr : .  (33)
+
+	CORIZQ  shift 51
+	ID  reduce 33
+
+	param_arr  goto 52
+
+
+state 48
+	arg : tipo_arg ID .  (29)
+
+	.  reduce 29
+
+
+state 49
+	funciones : DEF tipo ID $$5 LPAR argumentos RPAR . INICIO declaraciones sentencias FIN $$6 funciones  (23)
+
+	INICIO  shift 53
+	.  error
+
+
+state 50
+	lista_arg : lista_arg COMA . arg  (27)
 
 	SIN  shift 4
 	ENT  shift 5
@@ -550,32 +582,26 @@ state 47
 	CAR  shift 8
 	.  error
 
-	arg  goto 52
+	base  goto 42
 	tipo_arg  goto 43
-	base  goto 44
-
-
-state 48
-	arg : tipo_arg ID .  (27)
-
-	.  reduce 27
-
-
-state 49
-	param_arr : CORIZQ . CORDER param_arr  (29)
-
-	CORDER  shift 53
-	.  error
-
-
-state 50
-	tipo_arg : base param_arr .  (28)
-
-	.  reduce 28
+	arg  goto 54
 
 
 state 51
-	funciones : DEF tipo ID LPAR argumentos RPAR INICIO . declaraciones sentencias FIN funciones  (21)
+	param_arr : CORIZQ . CORDER param_arr  (32)
+
+	CORDER  shift 55
+	.  error
+
+
+state 52
+	tipo_arg : base $$7 param_arr .  (31)
+
+	.  reduce 31
+
+
+state 53
+	funciones : DEF tipo ID $$5 LPAR argumentos RPAR INICIO . declaraciones sentencias FIN $$6 funciones  (23)
 	declaraciones : .  (6)
 
 	ESTRUCTURA  shift 3
@@ -596,190 +622,689 @@ state 51
 	TERMINAR  reduce 6
 	ID  reduce 6
 
-	declaraciones  goto 54
+	declaraciones  goto 56
 	tipo_registro  goto 10
 	base  goto 11
 	tipo  goto 12
 
 
-state 52
-	lista_arg : lista_arg COMA arg .  (25)
-
-	.  reduce 25
-
-
-state 53
-	param_arr : CORIZQ CORDER . param_arr  (29)
-	param_arr : .  (30)
-
-	CORIZQ  shift 49
-	ID  reduce 30
-
-	param_arr  goto 55
-
-
 state 54
-	funciones : DEF tipo ID LPAR argumentos RPAR INICIO declaraciones . sentencias FIN funciones  (21)
-	sentencias : .  (32)
+	lista_arg : lista_arg COMA arg .  (27)
 
-	.  reduce 32
-
-	sentencias  goto 56
+	.  reduce 27
 
 
 state 55
-	param_arr : CORIZQ CORDER param_arr .  (29)
+	param_arr : CORIZQ CORDER . param_arr  (32)
+	param_arr : .  (33)
 
-	.  reduce 29
+	CORIZQ  shift 51
+	ID  reduce 33
+
+	param_arr  goto 57
 
 
 state 56
-	funciones : DEF tipo ID LPAR argumentos RPAR INICIO declaraciones sentencias . FIN funciones  (21)
-	sentencias : sentencias . sentencia  (31)
+	funciones : DEF tipo ID $$5 LPAR argumentos RPAR INICIO declaraciones . sentencias FIN $$6 funciones  (23)
+	sentencias : .  (35)
 
-	INICIO  shift 57
-	FIN  shift 58
-	SI  shift 59
-	MIENTRAS  shift 60
-	HACER  shift 61
-	SEGUN  shift 62
-	ESCRIBIR  shift 63
-	DEVOLVER  shift 64
-	LEER  shift 65
-	TERMINAR  shift 66
-	ID  shift 67
-	.  error
+	.  reduce 35
 
-	sentencia  goto 68
-	variable  goto 69
+	sentencias  goto 58
 
 
 state 57
-	sentencia : INICIO . sentencias FIN  (44)
-	sentencias : .  (32)
+	param_arr : CORIZQ CORDER param_arr .  (32)
 
 	.  reduce 32
-
-	sentencias  goto 70
 
 
 state 58
-	funciones : DEF tipo ID LPAR argumentos RPAR INICIO declaraciones sentencias FIN . funciones  (21)
-	funciones : .  (22)
+	funciones : DEF tipo ID $$5 LPAR argumentos RPAR INICIO declaraciones sentencias . FIN $$6 funciones  (23)
+	sentencias : sentencias . sentencia  (34)
 
-	DEF  shift 14
-	$end  reduce 22
+	INICIO  shift 59
+	FIN  shift 60
+	SI  shift 61
+	MIENTRAS  shift 62
+	HACER  shift 63
+	SEGUN  shift 64
+	ESCRIBIR  shift 65
+	DEVOLVER  shift 66
+	LEER  shift 67
+	TERMINAR  shift 68
+	ID  shift 69
+	.  error
 
-	funciones  goto 71
+	sentencia  goto 70
+	variable  goto 71
 
 
 state 59
-	sentencia : SI . e_bool ENTONCES sentencias FIN  (33)
-	sentencia : SI . e_bool ENTONCES sentencias SINO sentencias FIN  (34)
+	sentencia : INICIO . sentencias FIN  (47)
+	sentencias : .  (35)
 
-	FALSO  shift 72
-	VERDADERO  shift 73
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	NO  shift 77
-	LPAR  shift 78
-	.  error
+	.  reduce 35
 
-	e_bool  goto 79
-	relacional  goto 80
-	expresion  goto 81
-	variable  goto 82
+	sentencias  goto 72
 
 
 state 60
-	sentencia : MIENTRAS . e_bool HACER sentencias FIN  (35)
+	funciones : DEF tipo ID $$5 LPAR argumentos RPAR INICIO declaraciones sentencias FIN . $$6 funciones  (23)
+	$$6 : .  (22)
 
-	FALSO  shift 72
-	VERDADERO  shift 73
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	NO  shift 77
-	LPAR  shift 78
-	.  error
+	.  reduce 22
 
-	e_bool  goto 83
-	relacional  goto 80
-	expresion  goto 81
-	variable  goto 82
+	$$6  goto 73
 
 
 state 61
-	sentencia : HACER . sentencias MIENTRAS e_bool PYC  (36)
-	sentencias : .  (32)
+	sentencia : SI . e_bool ENTONCES sentencias FIN  (36)
+	sentencia : SI . e_bool ENTONCES sentencias SINO sentencias FIN  (37)
 
-	.  reduce 32
+	FALSO  shift 74
+	VERDADERO  shift 75
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	NO  shift 79
+	LPAR  shift 80
+	.  error
 
-	sentencias  goto 84
+	e_bool  goto 81
+	relacional  goto 82
+	variable  goto 83
+	expresion  goto 84
 
 
 state 62
-	sentencia : SEGUN . LPAR variable RPAR HACER casos predeterminado FIN  (37)
+	sentencia : MIENTRAS . e_bool HACER sentencias FIN  (38)
 
-	LPAR  shift 85
+	FALSO  shift 74
+	VERDADERO  shift 75
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	NO  shift 79
+	LPAR  shift 80
 	.  error
+
+	e_bool  goto 85
+	relacional  goto 82
+	variable  goto 83
+	expresion  goto 84
 
 
 state 63
-	sentencia : ESCRIBIR . expresion PYC  (39)
+	sentencia : HACER . sentencias MIENTRAS e_bool PYC  (39)
+	sentencias : .  (35)
 
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
-	.  error
+	.  reduce 35
 
-	expresion  goto 86
-	variable  goto 82
+	sentencias  goto 86
 
 
 state 64
-	sentencia : DEVOLVER . PYC  (41)
-	sentencia : DEVOLVER . expresion PYC  (42)
+	sentencia : SEGUN . LPAR variable RPAR HACER casos predeterminado FIN  (40)
 
-	PYC  shift 87
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
+	LPAR  shift 87
 	.  error
-
-	expresion  goto 88
-	variable  goto 82
 
 
 state 65
-	sentencia : LEER . variable PYC  (40)
+	sentencia : ESCRIBIR . expresion PYC  (42)
 
-	ID  shift 67
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
 	.  error
 
-	variable  goto 89
+	variable  goto 83
+	expresion  goto 88
 
 
 state 66
-	sentencia : TERMINAR . PYC  (43)
+	sentencia : DEVOLVER . PYC  (44)
+	sentencia : DEVOLVER . expresion PYC  (45)
 
-	PYC  shift 90
+	PYC  shift 89
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
 	.  error
+
+	variable  goto 83
+	expresion  goto 90
 
 
 state 67
-	variable : ID . variable_comp  (64)
-	dato_est_sim : .  (69)
+	sentencia : LEER . variable PYC  (43)
 
-	CORIZQ  shift 91
-	LPAR  shift 92
+	ID  shift 69
+	.  error
+
+	variable  goto 91
+
+
+state 68
+	sentencia : TERMINAR . PYC  (46)
+
+	PYC  shift 92
+	.  error
+
+
+state 69
+	variable : ID . $$8 variable_comp  (68)
+	$$8 : .  (67)
+
+	.  reduce 67
+
+	$$8  goto 93
+
+
+state 70
+	sentencias : sentencias sentencia .  (34)
+
+	.  reduce 34
+
+
+state 71
+	sentencia : variable . ASIG expresion PYC  (41)
+
+	ASIG  shift 94
+	.  error
+
+
+state 72
+	sentencias : sentencias . sentencia  (34)
+	sentencia : INICIO sentencias . FIN  (47)
+
+	INICIO  shift 59
+	FIN  shift 95
+	SI  shift 61
+	MIENTRAS  shift 62
+	HACER  shift 63
+	SEGUN  shift 64
+	ESCRIBIR  shift 65
+	DEVOLVER  shift 66
+	LEER  shift 67
+	TERMINAR  shift 68
+	ID  shift 69
+	.  error
+
+	sentencia  goto 70
+	variable  goto 71
+
+
+state 73
+	funciones : DEF tipo ID $$5 LPAR argumentos RPAR INICIO declaraciones sentencias FIN $$6 . funciones  (23)
+	funciones : .  (24)
+
+	DEF  shift 14
+	$end  reduce 24
+
+	funciones  goto 96
+
+
+state 74
+	e_bool : FALSO .  (57)
+
+	.  reduce 57
+
+
+state 75
+	e_bool : VERDADERO .  (56)
+
+	.  reduce 56
+
+
+state 76
+	expresion : CARACTER .  (66)
+
+	.  reduce 66
+
+
+state 77
+	expresion : CADENA .  (65)
+
+	.  reduce 65
+
+
+state 78
+	expresion : NUM .  (64)
+
+	.  reduce 64
+
+
+state 79
+	e_bool : NO . e_bool  (54)
+
+	FALSO  shift 74
+	VERDADERO  shift 75
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	NO  shift 79
+	LPAR  shift 80
+	.  error
+
+	e_bool  goto 97
+	relacional  goto 82
+	variable  goto 83
+	expresion  goto 84
+
+
+state 80
+	expresion : LPAR . expresion RPAR  (62)
+
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
+	.  error
+
+	variable  goto 83
+	expresion  goto 98
+
+
+state 81
+	sentencia : SI e_bool . ENTONCES sentencias FIN  (36)
+	sentencia : SI e_bool . ENTONCES sentencias SINO sentencias FIN  (37)
+	e_bool : e_bool . O e_bool  (52)
+	e_bool : e_bool . Y e_bool  (53)
+
+	ENTONCES  shift 99
+	O  shift 100
+	Y  shift 101
+	.  error
+
+
+state 82
+	e_bool : relacional .  (55)
+	relacional : relacional . OPERADOR_RELACIONAL relacional  (58)
+
+	OPERADOR_RELACIONAL  shift 102
+	PYC  reduce 55
+	ENTONCES  reduce 55
+	HACER  reduce 55
+	O  reduce 55
+	Y  reduce 55
+
+
+state 83
+	expresion : variable .  (63)
+
+	.  reduce 63
+
+
+state 84
+	relacional : expresion .  (59)
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+
+	SUM_RES  shift 103
+	MUL_DIV_MOD  shift 104
+	PYC  reduce 59
+	ENTONCES  reduce 59
+	HACER  reduce 59
+	O  reduce 59
+	Y  reduce 59
+	OPERADOR_RELACIONAL  reduce 59
+
+
+state 85
+	sentencia : MIENTRAS e_bool . HACER sentencias FIN  (38)
+	e_bool : e_bool . O e_bool  (52)
+	e_bool : e_bool . Y e_bool  (53)
+
+	HACER  shift 105
+	O  shift 100
+	Y  shift 101
+	.  error
+
+
+state 86
+	sentencias : sentencias . sentencia  (34)
+	sentencia : HACER sentencias . MIENTRAS e_bool PYC  (39)
+
+	INICIO  shift 59
+	SI  shift 61
+	MIENTRAS  shift 106
+	HACER  shift 63
+	SEGUN  shift 64
+	ESCRIBIR  shift 65
+	DEVOLVER  shift 66
+	LEER  shift 67
+	TERMINAR  shift 68
+	ID  shift 69
+	.  error
+
+	sentencia  goto 70
+	variable  goto 71
+
+
+state 87
+	sentencia : SEGUN LPAR . variable RPAR HACER casos predeterminado FIN  (40)
+
+	ID  shift 69
+	.  error
+
+	variable  goto 107
+
+
+state 88
+	sentencia : ESCRIBIR expresion . PYC  (42)
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+
+	PYC  shift 108
+	SUM_RES  shift 103
+	MUL_DIV_MOD  shift 104
+	.  error
+
+
+state 89
+	sentencia : DEVOLVER PYC .  (44)
+
+	.  reduce 44
+
+
+state 90
+	sentencia : DEVOLVER expresion . PYC  (45)
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+
+	PYC  shift 109
+	SUM_RES  shift 103
+	MUL_DIV_MOD  shift 104
+	.  error
+
+
+state 91
+	sentencia : LEER variable . PYC  (43)
+
+	PYC  shift 110
+	.  error
+
+
+state 92
+	sentencia : TERMINAR PYC .  (46)
+
+	.  reduce 46
+
+
+state 93
+	variable : ID $$8 . variable_comp  (68)
+	dato_est_sim : .  (73)
+
+	CORIZQ  shift 111
+	LPAR  shift 112
+	PYC  reduce 73
+	ENTONCES  reduce 73
+	HACER  reduce 73
+	COMA  reduce 73
+	ASIG  reduce 73
+	O  reduce 73
+	Y  reduce 73
+	OPERADOR_RELACIONAL  reduce 73
+	SUM_RES  reduce 73
+	MUL_DIV_MOD  reduce 73
+	PUNTO  reduce 73
+	CORDER  reduce 73
+	RPAR  reduce 73
+
+	variable_comp  goto 113
+	arreglo  goto 114
+	dato_est_sim  goto 115
+
+
+state 94
+	sentencia : variable ASIG . expresion PYC  (41)
+
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
+	.  error
+
+	variable  goto 83
+	expresion  goto 116
+
+
+state 95
+	sentencia : INICIO sentencias FIN .  (47)
+
+	.  reduce 47
+
+
+state 96
+	funciones : DEF tipo ID $$5 LPAR argumentos RPAR INICIO declaraciones sentencias FIN $$6 funciones .  (23)
+
+	.  reduce 23
+
+
+state 97
+	e_bool : e_bool . O e_bool  (52)
+	e_bool : e_bool . Y e_bool  (53)
+	e_bool : NO e_bool .  (54)
+
+	.  reduce 54
+
+
+state 98
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+	expresion : LPAR expresion . RPAR  (62)
+
+	SUM_RES  shift 103
+	MUL_DIV_MOD  shift 104
+	RPAR  shift 117
+	.  error
+
+
+state 99
+	sentencia : SI e_bool ENTONCES . sentencias FIN  (36)
+	sentencia : SI e_bool ENTONCES . sentencias SINO sentencias FIN  (37)
+	sentencias : .  (35)
+
+	.  reduce 35
+
+	sentencias  goto 118
+
+
+state 100
+	e_bool : e_bool O . e_bool  (52)
+
+	FALSO  shift 74
+	VERDADERO  shift 75
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	NO  shift 79
+	LPAR  shift 80
+	.  error
+
+	e_bool  goto 119
+	relacional  goto 82
+	variable  goto 83
+	expresion  goto 84
+
+
+state 101
+	e_bool : e_bool Y . e_bool  (53)
+
+	FALSO  shift 74
+	VERDADERO  shift 75
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	NO  shift 79
+	LPAR  shift 80
+	.  error
+
+	e_bool  goto 120
+	relacional  goto 82
+	variable  goto 83
+	expresion  goto 84
+
+
+state 102
+	relacional : relacional OPERADOR_RELACIONAL . relacional  (58)
+
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
+	.  error
+
+	relacional  goto 121
+	variable  goto 83
+	expresion  goto 84
+
+
+state 103
+	expresion : expresion SUM_RES . expresion  (60)
+
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
+	.  error
+
+	variable  goto 83
+	expresion  goto 122
+
+
+state 104
+	expresion : expresion MUL_DIV_MOD . expresion  (61)
+
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
+	.  error
+
+	variable  goto 83
+	expresion  goto 123
+
+
+state 105
+	sentencia : MIENTRAS e_bool HACER . sentencias FIN  (38)
+	sentencias : .  (35)
+
+	.  reduce 35
+
+	sentencias  goto 124
+
+
+state 106
+	sentencia : MIENTRAS . e_bool HACER sentencias FIN  (38)
+	sentencia : HACER sentencias MIENTRAS . e_bool PYC  (39)
+
+	FALSO  shift 74
+	VERDADERO  shift 75
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	NO  shift 79
+	LPAR  shift 80
+	.  error
+
+	e_bool  goto 125
+	relacional  goto 82
+	variable  goto 83
+	expresion  goto 84
+
+
+state 107
+	sentencia : SEGUN LPAR variable . RPAR HACER casos predeterminado FIN  (40)
+
+	RPAR  shift 126
+	.  error
+
+
+state 108
+	sentencia : ESCRIBIR expresion PYC .  (42)
+
+	.  reduce 42
+
+
+state 109
+	sentencia : DEVOLVER expresion PYC .  (45)
+
+	.  reduce 45
+
+
+state 110
+	sentencia : LEER variable PYC .  (43)
+
+	.  reduce 43
+
+
+state 111
+	arreglo : CORIZQ . expresion CORDER  (74)
+	arreglo : CORIZQ . expresion CORDER arreglo  (75)
+
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
+	.  error
+
+	variable  goto 83
+	expresion  goto 127
+
+
+state 112
+	variable_comp : LPAR . parametros RPAR  (71)
+	parametros : .  (77)
+
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
+	RPAR  reduce 77
+
+	parametros  goto 128
+	lista_param  goto 129
+	variable  goto 83
+	expresion  goto 130
+
+
+state 113
+	variable : ID $$8 variable_comp .  (68)
+
+	.  reduce 68
+
+
+state 114
+	variable_comp : arreglo .  (70)
+
+	.  reduce 70
+
+
+state 115
+	variable_comp : dato_est_sim .  (69)
+	dato_est_sim : dato_est_sim . PUNTO ID  (72)
+
+	PUNTO  shift 131
 	PYC  reduce 69
 	ENTONCES  reduce 69
 	HACER  reduce 69
@@ -790,917 +1315,436 @@ state 67
 	OPERADOR_RELACIONAL  reduce 69
 	SUM_RES  reduce 69
 	MUL_DIV_MOD  reduce 69
-	PUNTO  reduce 69
 	CORDER  reduce 69
 	RPAR  reduce 69
 
-	arreglo  goto 93
-	dato_est_sim  goto 94
-	variable_comp  goto 95
-
-
-state 68
-	sentencias : sentencias sentencia .  (31)
-
-	.  reduce 31
-
-
-state 69
-	sentencia : variable . ASIG expresion PYC  (38)
-
-	ASIG  shift 96
-	.  error
-
-
-state 70
-	sentencias : sentencias . sentencia  (31)
-	sentencia : INICIO sentencias . FIN  (44)
-
-	INICIO  shift 57
-	FIN  shift 97
-	SI  shift 59
-	MIENTRAS  shift 60
-	HACER  shift 61
-	SEGUN  shift 62
-	ESCRIBIR  shift 63
-	DEVOLVER  shift 64
-	LEER  shift 65
-	TERMINAR  shift 66
-	ID  shift 67
-	.  error
-
-	sentencia  goto 68
-	variable  goto 69
-
-
-state 71
-	funciones : DEF tipo ID LPAR argumentos RPAR INICIO declaraciones sentencias FIN funciones .  (21)
-
-	.  reduce 21
-
-
-state 72
-	e_bool : FALSO .  (54)
-
-	.  reduce 54
-
-
-state 73
-	e_bool : VERDADERO .  (53)
-
-	.  reduce 53
-
-
-state 74
-	expresion : CARACTER .  (63)
-
-	.  reduce 63
-
-
-state 75
-	expresion : CADENA .  (62)
-
-	.  reduce 62
-
-
-state 76
-	expresion : NUM .  (61)
-
-	.  reduce 61
-
-
-state 77
-	e_bool : NO . e_bool  (51)
-
-	FALSO  shift 72
-	VERDADERO  shift 73
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	NO  shift 77
-	LPAR  shift 78
-	.  error
-
-	e_bool  goto 98
-	relacional  goto 80
-	expresion  goto 81
-	variable  goto 82
-
-
-state 78
-	expresion : LPAR . expresion RPAR  (59)
-
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
-	.  error
-
-	expresion  goto 99
-	variable  goto 82
-
-
-state 79
-	sentencia : SI e_bool . ENTONCES sentencias FIN  (33)
-	sentencia : SI e_bool . ENTONCES sentencias SINO sentencias FIN  (34)
-	e_bool : e_bool . O e_bool  (49)
-	e_bool : e_bool . Y e_bool  (50)
-
-	ENTONCES  shift 100
-	O  shift 101
-	Y  shift 102
-	.  error
-
-
-state 80
-	e_bool : relacional .  (52)
-	relacional : relacional . OPERADOR_RELACIONAL relacional  (55)
-
-	OPERADOR_RELACIONAL  shift 103
-	PYC  reduce 52
-	ENTONCES  reduce 52
-	HACER  reduce 52
-	O  reduce 52
-	Y  reduce 52
-
-
-state 81
-	relacional : expresion .  (56)
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
-
-	SUM_RES  shift 104
-	MUL_DIV_MOD  shift 105
-	PYC  reduce 56
-	ENTONCES  reduce 56
-	HACER  reduce 56
-	O  reduce 56
-	Y  reduce 56
-	OPERADOR_RELACIONAL  reduce 56
-
-
-state 82
-	expresion : variable .  (60)
-
-	.  reduce 60
-
-
-state 83
-	sentencia : MIENTRAS e_bool . HACER sentencias FIN  (35)
-	e_bool : e_bool . O e_bool  (49)
-	e_bool : e_bool . Y e_bool  (50)
-
-	HACER  shift 106
-	O  shift 101
-	Y  shift 102
-	.  error
-
-
-state 84
-	sentencias : sentencias . sentencia  (31)
-	sentencia : HACER sentencias . MIENTRAS e_bool PYC  (36)
-
-	INICIO  shift 57
-	SI  shift 59
-	MIENTRAS  shift 107
-	HACER  shift 61
-	SEGUN  shift 62
-	ESCRIBIR  shift 63
-	DEVOLVER  shift 64
-	LEER  shift 65
-	TERMINAR  shift 66
-	ID  shift 67
-	.  error
-
-	sentencia  goto 68
-	variable  goto 69
-
-
-state 85
-	sentencia : SEGUN LPAR . variable RPAR HACER casos predeterminado FIN  (37)
-
-	ID  shift 67
-	.  error
-
-	variable  goto 108
-
-
-state 86
-	sentencia : ESCRIBIR expresion . PYC  (39)
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
-
-	PYC  shift 109
-	SUM_RES  shift 104
-	MUL_DIV_MOD  shift 105
-	.  error
-
-
-state 87
-	sentencia : DEVOLVER PYC .  (41)
-
-	.  reduce 41
-
-
-state 88
-	sentencia : DEVOLVER expresion . PYC  (42)
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
-
-	PYC  shift 110
-	SUM_RES  shift 104
-	MUL_DIV_MOD  shift 105
-	.  error
-
-
-state 89
-	sentencia : LEER variable . PYC  (40)
-
-	PYC  shift 111
-	.  error
-
-
-state 90
-	sentencia : TERMINAR PYC .  (43)
-
-	.  reduce 43
-
-
-state 91
-	arreglo : CORIZQ . expresion CORDER  (70)
-	arreglo : CORIZQ . expresion CORDER arreglo  (71)
-
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
-	.  error
-
-	expresion  goto 112
-	variable  goto 82
-
-
-state 92
-	variable_comp : LPAR . parametros RPAR  (67)
-	parametros : .  (73)
-
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
-	RPAR  reduce 73
-
-	expresion  goto 113
-	variable  goto 82
-	parametros  goto 114
-	lista_param  goto 115
-
-
-state 93
-	variable_comp : arreglo .  (66)
-
-	.  reduce 66
-
-
-state 94
-	variable_comp : dato_est_sim .  (65)
-	dato_est_sim : dato_est_sim . PUNTO ID  (68)
-
-	PUNTO  shift 116
-	PYC  reduce 65
-	ENTONCES  reduce 65
-	HACER  reduce 65
-	COMA  reduce 65
-	ASIG  reduce 65
-	O  reduce 65
-	Y  reduce 65
-	OPERADOR_RELACIONAL  reduce 65
-	SUM_RES  reduce 65
-	MUL_DIV_MOD  reduce 65
-	CORDER  reduce 65
-	RPAR  reduce 65
-
-
-state 95
-	variable : ID variable_comp .  (64)
-
-	.  reduce 64
-
-
-state 96
-	sentencia : variable ASIG . expresion PYC  (38)
-
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
-	.  error
-
-	expresion  goto 117
-	variable  goto 82
-
-
-state 97
-	sentencia : INICIO sentencias FIN .  (44)
-
-	.  reduce 44
-
-
-state 98
-	e_bool : e_bool . O e_bool  (49)
-	e_bool : e_bool . Y e_bool  (50)
-	e_bool : NO e_bool .  (51)
-
-	.  reduce 51
-
-
-state 99
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
-	expresion : LPAR expresion . RPAR  (59)
-
-	SUM_RES  shift 104
-	MUL_DIV_MOD  shift 105
-	RPAR  shift 118
-	.  error
-
-
-state 100
-	sentencia : SI e_bool ENTONCES . sentencias FIN  (33)
-	sentencia : SI e_bool ENTONCES . sentencias SINO sentencias FIN  (34)
-	sentencias : .  (32)
-
-	.  reduce 32
-
-	sentencias  goto 119
-
-
-state 101
-	e_bool : e_bool O . e_bool  (49)
-
-	FALSO  shift 72
-	VERDADERO  shift 73
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	NO  shift 77
-	LPAR  shift 78
-	.  error
-
-	e_bool  goto 120
-	relacional  goto 80
-	expresion  goto 81
-	variable  goto 82
-
-
-state 102
-	e_bool : e_bool Y . e_bool  (50)
-
-	FALSO  shift 72
-	VERDADERO  shift 73
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	NO  shift 77
-	LPAR  shift 78
-	.  error
-
-	e_bool  goto 121
-	relacional  goto 80
-	expresion  goto 81
-	variable  goto 82
-
-
-state 103
-	relacional : relacional OPERADOR_RELACIONAL . relacional  (55)
-
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
-	.  error
-
-	relacional  goto 122
-	expresion  goto 81
-	variable  goto 82
-
-
-state 104
-	expresion : expresion SUM_RES . expresion  (57)
-
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
-	.  error
-
-	expresion  goto 123
-	variable  goto 82
-
-
-state 105
-	expresion : expresion MUL_DIV_MOD . expresion  (58)
-
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
-	.  error
-
-	expresion  goto 124
-	variable  goto 82
-
-
-state 106
-	sentencia : MIENTRAS e_bool HACER . sentencias FIN  (35)
-	sentencias : .  (32)
-
-	.  reduce 32
-
-	sentencias  goto 125
-
-
-state 107
-	sentencia : MIENTRAS . e_bool HACER sentencias FIN  (35)
-	sentencia : HACER sentencias MIENTRAS . e_bool PYC  (36)
-
-	FALSO  shift 72
-	VERDADERO  shift 73
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	NO  shift 77
-	LPAR  shift 78
-	.  error
-
-	e_bool  goto 126
-	relacional  goto 80
-	expresion  goto 81
-	variable  goto 82
-
-
-state 108
-	sentencia : SEGUN LPAR variable . RPAR HACER casos predeterminado FIN  (37)
-
-	RPAR  shift 127
-	.  error
-
-
-state 109
-	sentencia : ESCRIBIR expresion PYC .  (39)
-
-	.  reduce 39
-
-
-state 110
-	sentencia : DEVOLVER expresion PYC .  (42)
-
-	.  reduce 42
-
-
-state 111
-	sentencia : LEER variable PYC .  (40)
-
-	.  reduce 40
-
-
-state 112
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
-	arreglo : CORIZQ expresion . CORDER  (70)
-	arreglo : CORIZQ expresion . CORDER arreglo  (71)
-
-	SUM_RES  shift 104
-	MUL_DIV_MOD  shift 105
-	CORDER  shift 128
-	.  error
-
-
-state 113
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
-	lista_param : expresion .  (75)
-
-	SUM_RES  shift 104
-	MUL_DIV_MOD  shift 105
-	COMA  reduce 75
-	RPAR  reduce 75
-
-
-state 114
-	variable_comp : LPAR parametros . RPAR  (67)
-
-	RPAR  shift 129
-	.  error
-
-
-state 115
-	parametros : lista_param .  (72)
-	lista_param : lista_param . COMA expresion  (74)
-
-	COMA  shift 130
-	RPAR  reduce 72
-
 
 state 116
-	dato_est_sim : dato_est_sim PUNTO . ID  (68)
+	sentencia : variable ASIG expresion . PYC  (41)
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
 
-	ID  shift 131
+	PYC  shift 132
+	SUM_RES  shift 103
+	MUL_DIV_MOD  shift 104
 	.  error
 
 
 state 117
-	sentencia : variable ASIG expresion . PYC  (38)
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
+	expresion : LPAR expresion RPAR .  (62)
 
-	PYC  shift 132
-	SUM_RES  shift 104
-	MUL_DIV_MOD  shift 105
-	.  error
+	.  reduce 62
 
 
 state 118
-	expresion : LPAR expresion RPAR .  (59)
+	sentencias : sentencias . sentencia  (34)
+	sentencia : SI e_bool ENTONCES sentencias . FIN  (36)
+	sentencia : SI e_bool ENTONCES sentencias . SINO sentencias FIN  (37)
 
-	.  reduce 59
-
-
-state 119
-	sentencias : sentencias . sentencia  (31)
-	sentencia : SI e_bool ENTONCES sentencias . FIN  (33)
-	sentencia : SI e_bool ENTONCES sentencias . SINO sentencias FIN  (34)
-
-	INICIO  shift 57
+	INICIO  shift 59
 	FIN  shift 133
-	SI  shift 59
-	MIENTRAS  shift 60
-	HACER  shift 61
-	SEGUN  shift 62
-	ESCRIBIR  shift 63
-	DEVOLVER  shift 64
-	LEER  shift 65
-	TERMINAR  shift 66
-	ID  shift 67
+	SI  shift 61
+	MIENTRAS  shift 62
+	HACER  shift 63
+	SEGUN  shift 64
+	ESCRIBIR  shift 65
+	DEVOLVER  shift 66
+	LEER  shift 67
+	TERMINAR  shift 68
+	ID  shift 69
 	SINO  shift 134
 	.  error
 
-	sentencia  goto 68
-	variable  goto 69
+	sentencia  goto 70
+	variable  goto 71
+
+
+state 119
+	e_bool : e_bool . O e_bool  (52)
+	e_bool : e_bool O e_bool .  (52)
+	e_bool : e_bool . Y e_bool  (53)
+
+	Y  shift 101
+	PYC  reduce 52
+	ENTONCES  reduce 52
+	HACER  reduce 52
+	O  reduce 52
 
 
 state 120
-	e_bool : e_bool . O e_bool  (49)
-	e_bool : e_bool O e_bool .  (49)
-	e_bool : e_bool . Y e_bool  (50)
+	e_bool : e_bool . O e_bool  (52)
+	e_bool : e_bool . Y e_bool  (53)
+	e_bool : e_bool Y e_bool .  (53)
 
-	Y  shift 102
-	PYC  reduce 49
-	ENTONCES  reduce 49
-	HACER  reduce 49
-	O  reduce 49
+	.  reduce 53
 
 
 state 121
-	e_bool : e_bool . O e_bool  (49)
-	e_bool : e_bool . Y e_bool  (50)
-	e_bool : e_bool Y e_bool .  (50)
-
-	.  reduce 50
-
-
-state 122
-	relacional : relacional . OPERADOR_RELACIONAL relacional  (55)
-	relacional : relacional OPERADOR_RELACIONAL relacional .  (55)
-
-	.  reduce 55
-
-
-state 123
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion SUM_RES expresion .  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
-
-	MUL_DIV_MOD  shift 105
-	PYC  reduce 57
-	ENTONCES  reduce 57
-	HACER  reduce 57
-	COMA  reduce 57
-	O  reduce 57
-	Y  reduce 57
-	OPERADOR_RELACIONAL  reduce 57
-	SUM_RES  reduce 57
-	CORDER  reduce 57
-	RPAR  reduce 57
-
-
-state 124
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
-	expresion : expresion MUL_DIV_MOD expresion .  (58)
+	relacional : relacional . OPERADOR_RELACIONAL relacional  (58)
+	relacional : relacional OPERADOR_RELACIONAL relacional .  (58)
 
 	.  reduce 58
 
 
-state 125
-	sentencias : sentencias . sentencia  (31)
-	sentencia : MIENTRAS e_bool HACER sentencias . FIN  (35)
+state 122
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion SUM_RES expresion .  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
 
-	INICIO  shift 57
+	MUL_DIV_MOD  shift 104
+	PYC  reduce 60
+	ENTONCES  reduce 60
+	HACER  reduce 60
+	COMA  reduce 60
+	O  reduce 60
+	Y  reduce 60
+	OPERADOR_RELACIONAL  reduce 60
+	SUM_RES  reduce 60
+	CORDER  reduce 60
+	RPAR  reduce 60
+
+
+state 123
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+	expresion : expresion MUL_DIV_MOD expresion .  (61)
+
+	.  reduce 61
+
+
+state 124
+	sentencias : sentencias . sentencia  (34)
+	sentencia : MIENTRAS e_bool HACER sentencias . FIN  (38)
+
+	INICIO  shift 59
 	FIN  shift 135
-	SI  shift 59
-	MIENTRAS  shift 60
-	HACER  shift 61
-	SEGUN  shift 62
-	ESCRIBIR  shift 63
-	DEVOLVER  shift 64
-	LEER  shift 65
-	TERMINAR  shift 66
-	ID  shift 67
+	SI  shift 61
+	MIENTRAS  shift 62
+	HACER  shift 63
+	SEGUN  shift 64
+	ESCRIBIR  shift 65
+	DEVOLVER  shift 66
+	LEER  shift 67
+	TERMINAR  shift 68
+	ID  shift 69
 	.  error
 
-	sentencia  goto 68
-	variable  goto 69
+	sentencia  goto 70
+	variable  goto 71
+
+
+state 125
+	sentencia : MIENTRAS e_bool . HACER sentencias FIN  (38)
+	sentencia : HACER sentencias MIENTRAS e_bool . PYC  (39)
+	e_bool : e_bool . O e_bool  (52)
+	e_bool : e_bool . Y e_bool  (53)
+
+	PYC  shift 136
+	HACER  shift 105
+	O  shift 100
+	Y  shift 101
+	.  error
 
 
 state 126
-	sentencia : MIENTRAS e_bool . HACER sentencias FIN  (35)
-	sentencia : HACER sentencias MIENTRAS e_bool . PYC  (36)
-	e_bool : e_bool . O e_bool  (49)
-	e_bool : e_bool . Y e_bool  (50)
-
-	PYC  shift 136
-	HACER  shift 106
-	O  shift 101
-	Y  shift 102
-	.  error
-
-
-state 127
-	sentencia : SEGUN LPAR variable RPAR . HACER casos predeterminado FIN  (37)
+	sentencia : SEGUN LPAR variable RPAR . HACER casos predeterminado FIN  (40)
 
 	HACER  shift 137
 	.  error
 
 
+state 127
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+	arreglo : CORIZQ expresion . CORDER  (74)
+	arreglo : CORIZQ expresion . CORDER arreglo  (75)
+
+	SUM_RES  shift 103
+	MUL_DIV_MOD  shift 104
+	CORDER  shift 138
+	.  error
+
+
 state 128
-	arreglo : CORIZQ expresion CORDER .  (70)
-	arreglo : CORIZQ expresion CORDER . arreglo  (71)
+	variable_comp : LPAR parametros . RPAR  (71)
 
-	CORIZQ  shift 91
-	PYC  reduce 70
-	ENTONCES  reduce 70
-	HACER  reduce 70
-	COMA  reduce 70
-	ASIG  reduce 70
-	O  reduce 70
-	Y  reduce 70
-	OPERADOR_RELACIONAL  reduce 70
-	SUM_RES  reduce 70
-	MUL_DIV_MOD  reduce 70
-	CORDER  reduce 70
-	RPAR  reduce 70
-
-	arreglo  goto 138
+	RPAR  shift 139
+	.  error
 
 
 state 129
-	variable_comp : LPAR parametros RPAR .  (67)
+	parametros : lista_param .  (76)
+	lista_param : lista_param . COMA expresion  (78)
 
-	.  reduce 67
+	COMA  shift 140
+	RPAR  reduce 76
 
 
 state 130
-	lista_param : lista_param COMA . expresion  (74)
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+	lista_param : expresion .  (79)
 
-	ID  shift 67
-	CARACTER  shift 74
-	CADENA  shift 75
-	NUM  shift 76
-	LPAR  shift 78
-	.  error
-
-	expresion  goto 139
-	variable  goto 82
+	SUM_RES  shift 103
+	MUL_DIV_MOD  shift 104
+	COMA  reduce 79
+	RPAR  reduce 79
 
 
 state 131
-	dato_est_sim : dato_est_sim PUNTO ID .  (68)
+	dato_est_sim : dato_est_sim PUNTO . ID  (72)
 
-	.  reduce 68
+	ID  shift 141
+	.  error
 
 
 state 132
-	sentencia : variable ASIG expresion PYC .  (38)
+	sentencia : variable ASIG expresion PYC .  (41)
 
-	.  reduce 38
+	.  reduce 41
 
 
 state 133
-	sentencia : SI e_bool ENTONCES sentencias FIN .  (33)
-
-	.  reduce 33
-
-
-state 134
-	sentencia : SI e_bool ENTONCES sentencias SINO . sentencias FIN  (34)
-	sentencias : .  (32)
-
-	.  reduce 32
-
-	sentencias  goto 140
-
-
-state 135
-	sentencia : MIENTRAS e_bool HACER sentencias FIN .  (35)
-
-	.  reduce 35
-
-
-state 136
-	sentencia : HACER sentencias MIENTRAS e_bool PYC .  (36)
+	sentencia : SI e_bool ENTONCES sentencias FIN .  (36)
 
 	.  reduce 36
 
 
-state 137
-	sentencia : SEGUN LPAR variable RPAR HACER . casos predeterminado FIN  (37)
+state 134
+	sentencia : SI e_bool ENTONCES sentencias SINO . sentencias FIN  (37)
+	sentencias : .  (35)
 
-	CASO  shift 141
+	.  reduce 35
+
+	sentencias  goto 142
+
+
+state 135
+	sentencia : MIENTRAS e_bool HACER sentencias FIN .  (38)
+
+	.  reduce 38
+
+
+state 136
+	sentencia : HACER sentencias MIENTRAS e_bool PYC .  (39)
+
+	.  reduce 39
+
+
+state 137
+	sentencia : SEGUN LPAR variable RPAR HACER . casos predeterminado FIN  (40)
+
+	CASO  shift 143
 	.  error
 
-	casos  goto 142
+	casos  goto 144
 
 
 state 138
-	arreglo : CORIZQ expresion CORDER arreglo .  (71)
+	arreglo : CORIZQ expresion CORDER .  (74)
+	arreglo : CORIZQ expresion CORDER . arreglo  (75)
+
+	CORIZQ  shift 111
+	PYC  reduce 74
+	ENTONCES  reduce 74
+	HACER  reduce 74
+	COMA  reduce 74
+	ASIG  reduce 74
+	O  reduce 74
+	Y  reduce 74
+	OPERADOR_RELACIONAL  reduce 74
+	SUM_RES  reduce 74
+	MUL_DIV_MOD  reduce 74
+	CORDER  reduce 74
+	RPAR  reduce 74
+
+	arreglo  goto 145
+
+
+state 139
+	variable_comp : LPAR parametros RPAR .  (71)
 
 	.  reduce 71
 
 
-state 139
-	expresion : expresion . SUM_RES expresion  (57)
-	expresion : expresion . MUL_DIV_MOD expresion  (58)
-	lista_param : lista_param COMA expresion .  (74)
-
-	SUM_RES  shift 104
-	MUL_DIV_MOD  shift 105
-	COMA  reduce 74
-	RPAR  reduce 74
-
-
 state 140
-	sentencias : sentencias . sentencia  (31)
-	sentencia : SI e_bool ENTONCES sentencias SINO sentencias . FIN  (34)
+	lista_param : lista_param COMA . expresion  (78)
 
-	INICIO  shift 57
-	FIN  shift 143
-	SI  shift 59
-	MIENTRAS  shift 60
-	HACER  shift 61
-	SEGUN  shift 62
-	ESCRIBIR  shift 63
-	DEVOLVER  shift 64
-	LEER  shift 65
-	TERMINAR  shift 66
-	ID  shift 67
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
 	.  error
 
-	sentencia  goto 68
-	variable  goto 69
+	variable  goto 83
+	expresion  goto 146
 
 
 state 141
-	casos : CASO . NUM DOSP sentencias casos  (45)
-	casos : CASO . NUM DOSP sentencias  (46)
+	dato_est_sim : dato_est_sim PUNTO ID .  (72)
 
-	NUM  shift 144
-	.  error
+	.  reduce 72
 
 
 state 142
-	sentencia : SEGUN LPAR variable RPAR HACER casos . predeterminado FIN  (37)
-	predeterminado : .  (48)
+	sentencias : sentencias . sentencia  (34)
+	sentencia : SI e_bool ENTONCES sentencias SINO sentencias . FIN  (37)
 
-	PRED  shift 145
-	FIN  reduce 48
+	INICIO  shift 59
+	FIN  shift 147
+	SI  shift 61
+	MIENTRAS  shift 62
+	HACER  shift 63
+	SEGUN  shift 64
+	ESCRIBIR  shift 65
+	DEVOLVER  shift 66
+	LEER  shift 67
+	TERMINAR  shift 68
+	ID  shift 69
+	.  error
 
-	predeterminado  goto 146
+	sentencia  goto 70
+	variable  goto 71
 
 
 state 143
-	sentencia : SI e_bool ENTONCES sentencias SINO sentencias FIN .  (34)
+	casos : CASO . NUM DOSP sentencias casos  (48)
+	casos : CASO . NUM DOSP sentencias  (49)
 
-	.  reduce 34
+	NUM  shift 148
+	.  error
 
 
 state 144
-	casos : CASO NUM . DOSP sentencias casos  (45)
-	casos : CASO NUM . DOSP sentencias  (46)
+	sentencia : SEGUN LPAR variable RPAR HACER casos . predeterminado FIN  (40)
+	predeterminado : .  (51)
 
-	DOSP  shift 147
-	.  error
+	PRED  shift 149
+	FIN  reduce 51
+
+	predeterminado  goto 150
 
 
 state 145
-	predeterminado : PRED . DOSP sentencias  (47)
+	arreglo : CORIZQ expresion CORDER arreglo .  (75)
 
-	DOSP  shift 148
-	.  error
+	.  reduce 75
 
 
 state 146
-	sentencia : SEGUN LPAR variable RPAR HACER casos predeterminado . FIN  (37)
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+	lista_param : lista_param COMA expresion .  (78)
 
-	FIN  shift 149
-	.  error
+	SUM_RES  shift 103
+	MUL_DIV_MOD  shift 104
+	COMA  reduce 78
+	RPAR  reduce 78
 
 
 state 147
-	casos : CASO NUM DOSP . sentencias casos  (45)
-	casos : CASO NUM DOSP . sentencias  (46)
-	sentencias : .  (32)
-
-	.  reduce 32
-
-	sentencias  goto 150
-
-
-state 148
-	predeterminado : PRED DOSP . sentencias  (47)
-	sentencias : .  (32)
-
-	.  reduce 32
-
-	sentencias  goto 151
-
-
-state 149
-	sentencia : SEGUN LPAR variable RPAR HACER casos predeterminado FIN .  (37)
+	sentencia : SI e_bool ENTONCES sentencias SINO sentencias FIN .  (37)
 
 	.  reduce 37
 
 
+state 148
+	casos : CASO NUM . DOSP sentencias casos  (48)
+	casos : CASO NUM . DOSP sentencias  (49)
+
+	DOSP  shift 151
+	.  error
+
+
+state 149
+	predeterminado : PRED . DOSP sentencias  (50)
+
+	DOSP  shift 152
+	.  error
+
+
 state 150
-	sentencias : sentencias . sentencia  (31)
-	casos : CASO NUM DOSP sentencias . casos  (45)
-	casos : CASO NUM DOSP sentencias .  (46)
+	sentencia : SEGUN LPAR variable RPAR HACER casos predeterminado . FIN  (40)
 
-	INICIO  shift 57
-	SI  shift 59
-	MIENTRAS  shift 60
-	HACER  shift 61
-	SEGUN  shift 62
-	ESCRIBIR  shift 63
-	DEVOLVER  shift 64
-	LEER  shift 65
-	TERMINAR  shift 66
-	CASO  shift 141
-	ID  shift 67
-	FIN  reduce 46
-	PRED  reduce 46
-
-	sentencia  goto 68
-	casos  goto 152
-	variable  goto 69
+	FIN  shift 153
+	.  error
 
 
 state 151
-	sentencias : sentencias . sentencia  (31)
-	predeterminado : PRED DOSP sentencias .  (47)
+	casos : CASO NUM DOSP . sentencias casos  (48)
+	casos : CASO NUM DOSP . sentencias  (49)
+	sentencias : .  (35)
 
-	INICIO  shift 57
-	SI  shift 59
-	MIENTRAS  shift 60
-	HACER  shift 61
-	SEGUN  shift 62
-	ESCRIBIR  shift 63
-	DEVOLVER  shift 64
-	LEER  shift 65
-	TERMINAR  shift 66
-	ID  shift 67
-	FIN  reduce 47
+	.  reduce 35
 
-	sentencia  goto 68
-	variable  goto 69
+	sentencias  goto 154
 
 
 state 152
-	casos : CASO NUM DOSP sentencias casos .  (45)
+	predeterminado : PRED DOSP . sentencias  (50)
+	sentencias : .  (35)
 
-	.  reduce 45
+	.  reduce 35
+
+	sentencias  goto 155
 
 
-46 terminals, 32 nonterminals
-76 grammar rules, 153 states
+state 153
+	sentencia : SEGUN LPAR variable RPAR HACER casos predeterminado FIN .  (40)
+
+	.  reduce 40
+
+
+state 154
+	sentencias : sentencias . sentencia  (34)
+	casos : CASO NUM DOSP sentencias . casos  (48)
+	casos : CASO NUM DOSP sentencias .  (49)
+
+	INICIO  shift 59
+	SI  shift 61
+	MIENTRAS  shift 62
+	HACER  shift 63
+	SEGUN  shift 64
+	ESCRIBIR  shift 65
+	DEVOLVER  shift 66
+	LEER  shift 67
+	TERMINAR  shift 68
+	CASO  shift 143
+	ID  shift 69
+	FIN  reduce 49
+	PRED  reduce 49
+
+	sentencia  goto 70
+	casos  goto 156
+	variable  goto 71
+
+
+state 155
+	sentencias : sentencias . sentencia  (34)
+	predeterminado : PRED DOSP sentencias .  (50)
+
+	INICIO  shift 59
+	SI  shift 61
+	MIENTRAS  shift 62
+	HACER  shift 63
+	SEGUN  shift 64
+	ESCRIBIR  shift 65
+	DEVOLVER  shift 66
+	LEER  shift 67
+	TERMINAR  shift 68
+	ID  shift 69
+	FIN  reduce 50
+
+	sentencia  goto 70
+	variable  goto 71
+
+
+state 156
+	casos : CASO NUM DOSP sentencias casos .  (48)
+
+	.  reduce 48
+
+
+46 terminals, 36 nonterminals
+80 grammar rules, 157 states

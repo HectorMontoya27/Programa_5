@@ -28,6 +28,7 @@ listaArg* getArgs(T_Simbolos *ts, char id[]);                                   
 T_Tipos* getTT(T_Simbolos *tabla);                                              //Lista
 int getDir(T_Simbolos *st,char id[]);                                           //Lista
 char* getVar_TS(T_Simbolos *st, char id[]);                                     //Lista
+void copiarGlobalTS(Pila_T_Simbolos *pila);                                     //Lista
 
 
 #endif

@@ -296,3 +296,27 @@ char* getNombre_TT(T_Tipos *tabla, int id){
     }
     return NULL;
 }
+
+void copiarGlobalTT(Pila_T_Tipos *pila){
+    if (pila != NULL) {
+        T_Tipos *tt1, *tt2;
+        Tipo *t;
+        tt1 = pila->inicio;
+        tt2 = pila->cabeza;
+        t = tt1->inicio;
+        while (t != NULL) {
+            TT_nuevoRegistro(tt2,T_nuevo(t->nombre,t->tam,t->tipoBase,t->estructura));
+            t = t->siguente;
+        }
+    }
+}
+
+int getTipoBase(T_Tipos *tabla, int tipo){
+    if (tabla == NULL || tipo < 0) { return -1; }
+    Tipo *t = tabla->inicio;
+    while (t != NULL) {
+        if (t->id == tipo) { return t->tipoBase; }
+        t = t->siguente;
+    }
+    return -1;
+}

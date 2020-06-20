@@ -51,11 +51,32 @@
 typedef union{
   char dir[32];
   int base;
+
   struct {
       int tipo;
       int num;
-      char dir[10];
+      char dir[20];
   } numero;
+
+  struct {
+      int num;
+      struct LIST_ARG *lista;
+  } lista;
+
+  struct {
+      char dir[20];
+      char base[20];
+      int des;
+      int tipo;
+      int estructura;
+      struct T_SIMBOLOS *tabla;
+  } variable;
+
+  struct {
+      int tipo;
+      char dir[20];
+      int valor;
+  }expresion;
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
 extern YYSTYPE yylval;

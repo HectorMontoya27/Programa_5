@@ -23,5 +23,7 @@ int TT_getTam(T_Tipos *tabla, int tipo);                                        
 T_Tipos* getTablaGlobal(Pila_T_Tipos *pila);                                    //Lista
 T_Simbolos* getTS(T_Tipos *tabla, int id);                                      //Lista
 char* getNombre_TT(T_Tipos *tabla, int id);                                     //Lista
+void copiarGlobalTT(Pila_T_Tipos *pila);                                        //Lista
+int getTipoBase(T_Tipos *tabla, int tipo);                                      //Lista
 
 #endif

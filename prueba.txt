@@ -6,8 +6,16 @@ estructura inicio
   ent j;
 fin jh;
 
-def sin func (ent[] hg) inicio
-  x := ys + z;
+def sin func (ent hg) inicio
+  ent uno;
+  real dos;
+  dreal tres, cuatro;
+  car [5] cinco;
+
+  leer dos;
+  leer cinco[3];
+
+  /*x := ys + z;
   mientras 5 > j hacer
     j := j + 1;
   fin
@@ -21,5 +29,5 @@ def sin func (ent[] hg) inicio
   fin
   si x >= e + t entonces
     hj := 9 + 8;
-  fin
+  fin*/
 fin
