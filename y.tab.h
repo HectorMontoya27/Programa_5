@@ -33,15 +33,16 @@
 #define Y 289
 #define OPERADOR_RELACIONAL 290
 #define SUM_RES 291
-#define MUL_DIV_MOD 292
-#define NO 293
-#define PUNTO 294
-#define CORDER 295
-#define CORIZQ 296
-#define LPAR 297
-#define RPAR 298
-#define SIT 299
-#define SINO 300
+#define MUL_DIV 292
+#define MOD 293
+#define NO 294
+#define PUNTO 295
+#define CORDER 296
+#define CORIZQ 297
+#define LPAR 298
+#define RPAR 299
+#define SIT 300
+#define SINO 301
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
@@ -70,6 +71,7 @@ typedef union{
       int des;
       int tipo;
       int estructura;
+      int code_estructura;
       struct T_SIMBOLOS *tabla;
   } variable;
 
@@ -80,6 +82,8 @@ typedef union{
   }expresion;
 
   struct {
+      char dir[20];
+      int tipo;
       struct LISTA_INDICE *truelist;
       struct LISTA_INDICE *falselist;
   }boleano;

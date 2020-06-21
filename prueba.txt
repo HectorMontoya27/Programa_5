@@ -1,10 +1,16 @@
 ent x,b,c;
 real hola;
 dreal [5][6] se;
-ent [20][30] seis;
+ent [20][30][40] seis;
 
 estructura inicio
   ent j;
+  real k;
+  estructura inicio
+      ent j;
+      real k;
+  fin lam;
+  dreal b;
 fin jh;
 
 def sin func (ent hg) inicio
@@ -16,8 +22,22 @@ def sin func (ent hg) inicio
   leer dos;
   leer cinco[3];
   leer se[2][2];
-  leer seis[5][5];
+  leer seis[5][5][10];
+  leer jh.lam.k;
 
+  uno := 5;
+  dos := dos;
+  jh.lam.k := jh.k;
+
+  x := 2 + 3;
+  b := 5 - 3;
+  c := 4 * 5;
+  x := 2 % 5;
+  x := 1 + 2 + (3 * 5 + 4) / 5;
+  b := x + 3;
+
+  escribir c;
+  escribir 5;
   /*x := ys + z;
   mientras 5 > j hacer
     j := j + 1;
@@ -36,9 +56,9 @@ def sin func (ent hg) inicio
 fin
 
 def ent nueva (ent uno, real dos) inicio
-    dreal tmp1;
-    real tmp2;
-    ent [5]tmp3;
+    dreal hg1;
+    real hg2;
+    ent [5]hg3;
 
-    leer tmp2;
+    leer hg2;
 fin

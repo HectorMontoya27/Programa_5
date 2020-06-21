@@ -63,9 +63,22 @@ espacios [ \t\n\r]+
                                             return NUM;
                                           }
 {asignacion}                              {return ASIG;}
-{operador_relacional}                     {return OPERADOR_RELACIONAL;}
-"+"|"-"                                   {return SUM_RES;}
-"*"|"/"|"%"                               {return MUL_DIV_MOD;}
+{operador_relacional}                     {
+                                            strcpy(yylval.dir, yytext);
+                                            return OPERADOR_RELACIONAL;
+                                          }
+"+"|"-"                                   {
+                                            strcpy(yylval.dir, yytext);
+                                            return SUM_RES;
+                                          }
+"*"|"/"                                   {
+                                            strcpy(yylval.dir, yytext);
+                                            return MUL_DIV;
+                                          }
+"%"                                       {
+                                            strcpy(yylval.dir, yytext);
+                                            return MOD;
+                                          }
 "("                                       {return LPAR;}
 ")"                                       {return RPAR;}
 "["                                       {return CORIZQ;}
