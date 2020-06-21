@@ -51,6 +51,7 @@
 typedef union{
   char dir[32];
   int base;
+  struct LISTA_INDICE *nextlist;
 
   struct {
       int tipo;
@@ -77,6 +78,12 @@ typedef union{
       char dir[20];
       int valor;
   }expresion;
+
+  struct {
+      struct LISTA_INDICE *truelist;
+      struct LISTA_INDICE *falselist;
+  }boleano;
+
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
 extern YYSTYPE yylval;

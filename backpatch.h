@@ -18,8 +18,9 @@ struct LISTA_INDICE{
     Indice* final;
 };
 
-int temp;
-int temp2;
+int temporal;
+int etiqueta;
+int indices;
 
 /* -------------------------Declaracion de Funciones -------------------------- */
 /* Creacion */
@@ -36,5 +37,6 @@ listaIndice* combinar(listaIndice *lista1, listaIndice *lista2);      //Lista
 void backpatch(code *codigo, listaIndice *lista, char *label);        //Lista
 void nuevaTemp(char *t);                                              //Lista
 void nuevaEtiqueta(char *dire);                                       //Lista
+void nuevoIndex(char *i);                                             //Lista
 
 #endif

@@ -380,10 +380,10 @@ char* getVar_TS(T_Simbolos *st, char id[]){
 }
 
 /*
---Nombre Funcion:
---Descripcion:
---Autor:
---Fecha de creacion:
+--Nombre Funcion: copiarGlobalTS()
+--Descripcion: Copia el contenido de la tabla global a la cima de la pila
+--Autor: Héctor Montoya Pérez
+--Fecha de creacion: 20 Junio 2020
 */
 void copiarGlobalTS(Pila_T_Simbolos *pila){
     if (pila != NULL) {

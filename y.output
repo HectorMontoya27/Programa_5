@@ -676,8 +676,8 @@ state 58
 	ID  shift 69
 	.  error
 
-	sentencia  goto 70
-	variable  goto 71
+	variable  goto 70
+	sentencia  goto 71
 
 
 state 59
@@ -712,10 +712,10 @@ state 61
 	LPAR  shift 80
 	.  error
 
-	e_bool  goto 81
-	relacional  goto 82
-	variable  goto 83
-	expresion  goto 84
+	variable  goto 81
+	expresion  goto 82
+	e_bool  goto 83
+	relacional  goto 84
 
 
 state 62
@@ -731,10 +731,10 @@ state 62
 	LPAR  shift 80
 	.  error
 
+	variable  goto 81
+	expresion  goto 82
 	e_bool  goto 85
-	relacional  goto 82
-	variable  goto 83
-	expresion  goto 84
+	relacional  goto 84
 
 
 state 63
@@ -763,7 +763,7 @@ state 65
 	LPAR  shift 80
 	.  error
 
-	variable  goto 83
+	variable  goto 81
 	expresion  goto 88
 
 
@@ -779,7 +779,7 @@ state 66
 	LPAR  shift 80
 	.  error
 
-	variable  goto 83
+	variable  goto 81
 	expresion  goto 90
 
 
@@ -809,16 +809,16 @@ state 69
 
 
 state 70
-	sentencias : sentencias sentencia .  (34)
-
-	.  reduce 34
-
-
-state 71
 	sentencia : variable . ASIG expresion PYC  (41)
 
 	ASIG  shift 94
 	.  error
+
+
+state 71
+	sentencias : sentencias sentencia .  (34)
+
+	.  reduce 34
 
 
 state 72
@@ -838,8 +838,8 @@ state 72
 	ID  shift 69
 	.  error
 
-	sentencia  goto 70
-	variable  goto 71
+	variable  goto 70
+	sentencia  goto 71
 
 
 state 73
@@ -895,10 +895,10 @@ state 79
 	LPAR  shift 80
 	.  error
 
+	variable  goto 81
+	expresion  goto 82
 	e_bool  goto 97
-	relacional  goto 82
-	variable  goto 83
-	expresion  goto 84
+	relacional  goto 84
 
 
 state 80
@@ -911,47 +911,23 @@ state 80
 	LPAR  shift 80
 	.  error
 
-	variable  goto 83
+	variable  goto 81
 	expresion  goto 98
 
 
 state 81
-	sentencia : SI e_bool . ENTONCES sentencias FIN  (36)
-	sentencia : SI e_bool . ENTONCES sentencias SINO sentencias FIN  (37)
-	e_bool : e_bool . O e_bool  (52)
-	e_bool : e_bool . Y e_bool  (53)
-
-	ENTONCES  shift 99
-	O  shift 100
-	Y  shift 101
-	.  error
-
-
-state 82
-	e_bool : relacional .  (55)
-	relacional : relacional . OPERADOR_RELACIONAL relacional  (58)
-
-	OPERADOR_RELACIONAL  shift 102
-	PYC  reduce 55
-	ENTONCES  reduce 55
-	HACER  reduce 55
-	O  reduce 55
-	Y  reduce 55
-
-
-state 83
 	expresion : variable .  (63)
 
 	.  reduce 63
 
 
-state 84
+state 82
 	relacional : expresion .  (59)
 	expresion : expresion . SUM_RES expresion  (60)
 	expresion : expresion . MUL_DIV_MOD expresion  (61)
 
-	SUM_RES  shift 103
-	MUL_DIV_MOD  shift 104
+	SUM_RES  shift 99
+	MUL_DIV_MOD  shift 100
 	PYC  reduce 59
 	ENTONCES  reduce 59
 	HACER  reduce 59
@@ -960,14 +936,38 @@ state 84
 	OPERADOR_RELACIONAL  reduce 59
 
 
+state 83
+	sentencia : SI e_bool . ENTONCES sentencias FIN  (36)
+	sentencia : SI e_bool . ENTONCES sentencias SINO sentencias FIN  (37)
+	e_bool : e_bool . O e_bool  (52)
+	e_bool : e_bool . Y e_bool  (53)
+
+	ENTONCES  shift 101
+	O  shift 102
+	Y  shift 103
+	.  error
+
+
+state 84
+	e_bool : relacional .  (55)
+	relacional : relacional . OPERADOR_RELACIONAL relacional  (58)
+
+	OPERADOR_RELACIONAL  shift 104
+	PYC  reduce 55
+	ENTONCES  reduce 55
+	HACER  reduce 55
+	O  reduce 55
+	Y  reduce 55
+
+
 state 85
 	sentencia : MIENTRAS e_bool . HACER sentencias FIN  (38)
 	e_bool : e_bool . O e_bool  (52)
 	e_bool : e_bool . Y e_bool  (53)
 
 	HACER  shift 105
-	O  shift 100
-	Y  shift 101
+	O  shift 102
+	Y  shift 103
 	.  error
 
 
@@ -987,8 +987,8 @@ state 86
 	ID  shift 69
 	.  error
 
-	sentencia  goto 70
-	variable  goto 71
+	variable  goto 70
+	sentencia  goto 71
 
 
 state 87
@@ -1006,8 +1006,8 @@ state 88
 	expresion : expresion . MUL_DIV_MOD expresion  (61)
 
 	PYC  shift 108
-	SUM_RES  shift 103
-	MUL_DIV_MOD  shift 104
+	SUM_RES  shift 99
+	MUL_DIV_MOD  shift 100
 	.  error
 
 
@@ -1023,8 +1023,8 @@ state 90
 	expresion : expresion . MUL_DIV_MOD expresion  (61)
 
 	PYC  shift 109
-	SUM_RES  shift 103
-	MUL_DIV_MOD  shift 104
+	SUM_RES  shift 99
+	MUL_DIV_MOD  shift 100
 	.  error
 
 
@@ -1076,7 +1076,7 @@ state 94
 	LPAR  shift 80
 	.  error
 
-	variable  goto 83
+	variable  goto 81
 	expresion  goto 116
 
 
@@ -1105,23 +1105,51 @@ state 98
 	expresion : expresion . MUL_DIV_MOD expresion  (61)
 	expresion : LPAR expresion . RPAR  (62)
 
-	SUM_RES  shift 103
-	MUL_DIV_MOD  shift 104
+	SUM_RES  shift 99
+	MUL_DIV_MOD  shift 100
 	RPAR  shift 117
 	.  error
 
 
 state 99
+	expresion : expresion SUM_RES . expresion  (60)
+
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
+	.  error
+
+	variable  goto 81
+	expresion  goto 118
+
+
+state 100
+	expresion : expresion MUL_DIV_MOD . expresion  (61)
+
+	ID  shift 69
+	CARACTER  shift 76
+	CADENA  shift 77
+	NUM  shift 78
+	LPAR  shift 80
+	.  error
+
+	variable  goto 81
+	expresion  goto 119
+
+
+state 101
 	sentencia : SI e_bool ENTONCES . sentencias FIN  (36)
 	sentencia : SI e_bool ENTONCES . sentencias SINO sentencias FIN  (37)
 	sentencias : .  (35)
 
 	.  reduce 35
 
-	sentencias  goto 118
+	sentencias  goto 120
 
 
-state 100
+state 102
 	e_bool : e_bool O . e_bool  (52)
 
 	FALSO  shift 74
@@ -1134,13 +1162,13 @@ state 100
 	LPAR  shift 80
 	.  error
 
-	e_bool  goto 119
-	relacional  goto 82
-	variable  goto 83
-	expresion  goto 84
+	variable  goto 81
+	expresion  goto 82
+	e_bool  goto 121
+	relacional  goto 84
 
 
-state 101
+state 103
 	e_bool : e_bool Y . e_bool  (53)
 
 	FALSO  shift 74
@@ -1153,13 +1181,13 @@ state 101
 	LPAR  shift 80
 	.  error
 
-	e_bool  goto 120
-	relacional  goto 82
-	variable  goto 83
-	expresion  goto 84
+	variable  goto 81
+	expresion  goto 82
+	e_bool  goto 122
+	relacional  goto 84
 
 
-state 102
+state 104
 	relacional : relacional OPERADOR_RELACIONAL . relacional  (58)
 
 	ID  shift 69
@@ -1169,37 +1197,9 @@ state 102
 	LPAR  shift 80
 	.  error
 
-	relacional  goto 121
-	variable  goto 83
-	expresion  goto 84
-
-
-state 103
-	expresion : expresion SUM_RES . expresion  (60)
-
-	ID  shift 69
-	CARACTER  shift 76
-	CADENA  shift 77
-	NUM  shift 78
-	LPAR  shift 80
-	.  error
-
-	variable  goto 83
-	expresion  goto 122
-
-
-state 104
-	expresion : expresion MUL_DIV_MOD . expresion  (61)
-
-	ID  shift 69
-	CARACTER  shift 76
-	CADENA  shift 77
-	NUM  shift 78
-	LPAR  shift 80
-	.  error
-
-	variable  goto 83
-	expresion  goto 123
+	variable  goto 81
+	expresion  goto 82
+	relacional  goto 123
 
 
 state 105
@@ -1225,10 +1225,10 @@ state 106
 	LPAR  shift 80
 	.  error
 
+	variable  goto 81
+	expresion  goto 82
 	e_bool  goto 125
-	relacional  goto 82
-	variable  goto 83
-	expresion  goto 84
+	relacional  goto 84
 
 
 state 107
@@ -1267,7 +1267,7 @@ state 111
 	LPAR  shift 80
 	.  error
 
-	variable  goto 83
+	variable  goto 81
 	expresion  goto 127
 
 
@@ -1284,7 +1284,7 @@ state 112
 
 	parametros  goto 128
 	lista_param  goto 129
-	variable  goto 83
+	variable  goto 81
 	expresion  goto 130
 
 
@@ -1325,8 +1325,8 @@ state 116
 	expresion : expresion . MUL_DIV_MOD expresion  (61)
 
 	PYC  shift 132
-	SUM_RES  shift 103
-	MUL_DIV_MOD  shift 104
+	SUM_RES  shift 99
+	MUL_DIV_MOD  shift 100
 	.  error
 
 
@@ -1337,6 +1337,32 @@ state 117
 
 
 state 118
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion SUM_RES expresion .  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+
+	MUL_DIV_MOD  shift 100
+	PYC  reduce 60
+	ENTONCES  reduce 60
+	HACER  reduce 60
+	COMA  reduce 60
+	O  reduce 60
+	Y  reduce 60
+	OPERADOR_RELACIONAL  reduce 60
+	SUM_RES  reduce 60
+	CORDER  reduce 60
+	RPAR  reduce 60
+
+
+state 119
+	expresion : expresion . SUM_RES expresion  (60)
+	expresion : expresion . MUL_DIV_MOD expresion  (61)
+	expresion : expresion MUL_DIV_MOD expresion .  (61)
+
+	.  reduce 61
+
+
+state 120
 	sentencias : sentencias . sentencia  (34)
 	sentencia : SI e_bool ENTONCES sentencias . FIN  (36)
 	sentencia : SI e_bool ENTONCES sentencias . SINO sentencias FIN  (37)
@@ -1355,23 +1381,23 @@ state 118
 	SINO  shift 134
 	.  error
 
-	sentencia  goto 70
-	variable  goto 71
+	variable  goto 70
+	sentencia  goto 71
 
 
-state 119
+state 121
 	e_bool : e_bool . O e_bool  (52)
 	e_bool : e_bool O e_bool .  (52)
 	e_bool : e_bool . Y e_bool  (53)
 
-	Y  shift 101
+	Y  shift 103
 	PYC  reduce 52
 	ENTONCES  reduce 52
 	HACER  reduce 52
 	O  reduce 52
 
 
-state 120
+state 122
 	e_bool : e_bool . O e_bool  (52)
 	e_bool : e_bool . Y e_bool  (53)
 	e_bool : e_bool Y e_bool .  (53)
@@ -1379,37 +1405,11 @@ state 120
 	.  reduce 53
 
 
-state 121
+state 123
 	relacional : relacional . OPERADOR_RELACIONAL relacional  (58)
 	relacional : relacional OPERADOR_RELACIONAL relacional .  (58)
 
 	.  reduce 58
-
-
-state 122
-	expresion : expresion . SUM_RES expresion  (60)
-	expresion : expresion SUM_RES expresion .  (60)
-	expresion : expresion . MUL_DIV_MOD expresion  (61)
-
-	MUL_DIV_MOD  shift 104
-	PYC  reduce 60
-	ENTONCES  reduce 60
-	HACER  reduce 60
-	COMA  reduce 60
-	O  reduce 60
-	Y  reduce 60
-	OPERADOR_RELACIONAL  reduce 60
-	SUM_RES  reduce 60
-	CORDER  reduce 60
-	RPAR  reduce 60
-
-
-state 123
-	expresion : expresion . SUM_RES expresion  (60)
-	expresion : expresion . MUL_DIV_MOD expresion  (61)
-	expresion : expresion MUL_DIV_MOD expresion .  (61)
-
-	.  reduce 61
 
 
 state 124
@@ -1429,8 +1429,8 @@ state 124
 	ID  shift 69
 	.  error
 
-	sentencia  goto 70
-	variable  goto 71
+	variable  goto 70
+	sentencia  goto 71
 
 
 state 125
@@ -1441,8 +1441,8 @@ state 125
 
 	PYC  shift 136
 	HACER  shift 105
-	O  shift 100
-	Y  shift 101
+	O  shift 102
+	Y  shift 103
 	.  error
 
 
@@ -1459,8 +1459,8 @@ state 127
 	arreglo : CORIZQ expresion . CORDER  (74)
 	arreglo : CORIZQ expresion . CORDER arreglo  (75)
 
-	SUM_RES  shift 103
-	MUL_DIV_MOD  shift 104
+	SUM_RES  shift 99
+	MUL_DIV_MOD  shift 100
 	CORDER  shift 138
 	.  error
 
@@ -1485,8 +1485,8 @@ state 130
 	expresion : expresion . MUL_DIV_MOD expresion  (61)
 	lista_param : expresion .  (79)
 
-	SUM_RES  shift 103
-	MUL_DIV_MOD  shift 104
+	SUM_RES  shift 99
+	MUL_DIV_MOD  shift 100
 	COMA  reduce 79
 	RPAR  reduce 79
 
@@ -1577,7 +1577,7 @@ state 140
 	LPAR  shift 80
 	.  error
 
-	variable  goto 83
+	variable  goto 81
 	expresion  goto 146
 
 
@@ -1604,8 +1604,8 @@ state 142
 	ID  shift 69
 	.  error
 
-	sentencia  goto 70
-	variable  goto 71
+	variable  goto 70
+	sentencia  goto 71
 
 
 state 143
@@ -1637,8 +1637,8 @@ state 146
 	expresion : expresion . MUL_DIV_MOD expresion  (61)
 	lista_param : lista_param COMA expresion .  (78)
 
-	SUM_RES  shift 103
-	MUL_DIV_MOD  shift 104
+	SUM_RES  shift 99
+	MUL_DIV_MOD  shift 100
 	COMA  reduce 78
 	RPAR  reduce 78
 
@@ -1715,9 +1715,9 @@ state 154
 	FIN  reduce 49
 	PRED  reduce 49
 
-	sentencia  goto 70
 	casos  goto 156
-	variable  goto 71
+	variable  goto 70
+	sentencia  goto 71
 
 
 state 155
@@ -1736,8 +1736,8 @@ state 155
 	ID  shift 69
 	FIN  reduce 50
 
-	sentencia  goto 70
-	variable  goto 71
+	variable  goto 70
+	sentencia  goto 71
 
 
 state 156

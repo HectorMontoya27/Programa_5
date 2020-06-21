@@ -297,6 +297,12 @@ char* getNombre_TT(T_Tipos *tabla, int id){
     return NULL;
 }
 
+/*
+--Nombre Funcion: copiarGlobalTT()
+--Descripcion: Copia el contenido de la tabla global a la de la cima de la pila
+--Autor: Héctor Montoya Pérez
+--Fecha de creacion: 20 Junio 2020
+*/
 void copiarGlobalTT(Pila_T_Tipos *pila){
     if (pila != NULL) {
         T_Tipos *tt1, *tt2;
@@ -311,6 +317,12 @@ void copiarGlobalTT(Pila_T_Tipos *pila){
     }
 }
 
+/*
+--Nombre Funcion: getTipoBase()
+--Descripcion: Retorna el tipo base de un tipo
+--Autor: Héctor Montoya Pérez
+--Fecha de creacion: 20 Junio 2020
+*/
 int getTipoBase(T_Tipos *tabla, int tipo){
     if (tabla == NULL || tipo < 0) { return -1; }
     Tipo *t = tabla->inicio;

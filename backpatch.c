@@ -162,7 +162,7 @@ void backpatch(code *codigo, listaIndice *lista, char *label){
 --Fecha de creacion: Desconocido
 */
 void nuevaTemp(char *t){
-    sprintf(t, "t%d", temp++);
+    sprintf(t, "t%d", temporal++);
 }
 
 /*
@@ -173,7 +173,15 @@ void nuevaTemp(char *t){
 --Ultima modificacion: 24 Mayo 2020
 */
 void nuevaEtiqueta(char *dire){
-    char L[32];
-    sprintf(L, "L%d", temp2++);
-    strcpy (dire,L);
+    sprintf(dire, "L%d", etiqueta++);
+}
+
+/*
+--Nombre Funcion: nuevoIndex()
+--Descripcion: Se crea nuevo indice
+--Autor: Héctor Montoya Pérez
+--Fecha de creacion: 20 Junio 2020
+*/
+void nuevoIndex(char *i){
+    sprintf(i, "i%d", indices++);
 }
