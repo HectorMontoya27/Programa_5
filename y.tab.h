@@ -52,7 +52,10 @@
 typedef union{
   char dir[32];
   int base;
-  struct LISTA_INDICE *nextlist;
+  struct {
+      struct LISTA_INDICE *nextlist;
+      char label[10];
+  }sentencias;
 
   struct {
       int tipo;

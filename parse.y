@@ -31,7 +31,10 @@ char GBLid[20];
 %union{
   char dir[32];
   int base;
-  struct LISTA_INDICE *nextlist;
+  struct {
+      struct LISTA_INDICE *nextlist;
+      char label[10];
+  }sentencias;
 
   struct {
       int tipo;
@@ -119,7 +122,7 @@ char GBLid[20];
 %type<variable> variable variable_comp arreglo dato_est_sim
 %type<expresion> expresion
 %type<boleano> e_bool relacional
-%type<nextlist> sentencias sentencia
+%type<sentencias> sentencias sentencia
 
 /*Inicio*/
 %start programa
@@ -231,10 +234,47 @@ param_arr : CORIZQ CORDER param_arr { $$ = TT_nuevoRegistro(PilaTT->cabeza,T_nue
 | { $$ = baseGBL; };
 
 sentencias : sentencias sentencia {}
-| {};
+| {
+    $$.nextlist = nuevaListaIndice();
+    char *tmpE = (char *)malloc(sizeof(char)*10);
+    nuevaEtiqueta(tmpE);
+    strcpy($$.label,tmpE);
+    agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",tmpE));
+};
 
-sentencia : SI e_bool ENTONCES sentencias FIN {}
-| SI e_bool ENTONCES sentencias SINO sentencias FIN {}
+sentencia : SI e_bool ENTONCES sentencias FIN {
+      char tmpE[10];
+      char *tmp = (char *)malloc(sizeof(char)*10);
+      nuevaEtiqueta(tmpE);
+      strcpy(tmp,$4.label);
+      backpatch(codigo,$2.truelist,tmp);
+      agregarIndice($4.nextlist,nuevoIndice(tmpE));
+      $$.nextlist = combinar($2.falselist,$4.nextlist);
+      backpatch(codigo,$$.nextlist,tmpE);
+      agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",tmpE));
+}
+| SI e_bool ENTONCES sentencias {
+      char *tmpE1 = (char *)malloc(sizeof(char)*10);
+      char *tmpE3 = (char *)malloc(sizeof(char)*10);
+      char *tmp5 = (char *)malloc(sizeof(char)*10);
+      nuevaEtiqueta(tmpE1);
+      nuevaEtiqueta(tmpE3);
+      strcpy(tmp5,$4.label);
+      backpatch(codigo,$2.truelist,tmp5);
+      agregarIndice($2.falselist,nuevoIndice(tmpE1));
+      agregarIndice($4.nextlist,nuevoIndice(tmpE3));
+      agregarCuadrupla(codigo,crearCuadrupla("GOTO","-","-",tmpE3));
+      agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",tmpE1));
+} SINO sentencias FIN {
+      char *tmpE2 = (char *)malloc(sizeof(char)*10);
+      char *tmpE4 = (char *)malloc(sizeof(char)*10);
+      nuevaEtiqueta(tmpE2);
+      nuevaEtiqueta(tmpE4);
+      agregarIndice($2.falselist,nuevoIndice($7.label));
+      backpatch(codigo,$2.falselist,tmpE4);
+      backpatch(codigo,$4.nextlist,tmpE2);
+      agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",tmpE2));
+}
 | MIENTRAS e_bool HACER sentencias FIN {}
 | HACER sentencias MIENTRAS e_bool PYC {}
 | SEGUN LPAR variable RPAR HACER casos predeterminado FIN {}

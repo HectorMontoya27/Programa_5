@@ -14,51 +14,47 @@ estructura inicio
 fin jh;
 
 def sin func (ent hg) inicio
-  ent uno;
-  real dos;
-  dreal tres, cuatro;
-  car [5] cinco;
 
-  leer dos;
-  leer cinco[3];
-  leer se[2][2];
-  leer seis[5][5][10];
-  leer jh.lam.k;
+ent uno;
+real dos;
+dreal tres, cuatro;
+car [5] cinco;
 
-  uno := 5;
-  dos := dos;
-  jh.lam.k := jh.k;
+leer dos;
+leer cinco[3];
+leer se[2][2];
+leer seis[5][5][10];
+leer jh.lam.k;
 
-  x := 2 + 3;
-  b := 5 - 3;
-  c := 4 * 5;
-  x := 2 % 5;
-  x := 1 + 2 + (3 * 5 + 4) / 5;
-  b := x + 3;
+uno := 5;
 
-  escribir c;
-  escribir 5;
-  /*x := ys + z;
-  mientras 5 > j hacer
-    j := j + 1;
-  fin
-  si verdadero entonces
-    mientras 5 > j hacer
-      j := j + 1;
+jh.lam.k := jh.k;
+
+x := 1 + 2 + (3 * 5 + 4) / 5;
+
+escribir c;
+escribir 5;
+
+si b = c ENTONCES
+    b := 5 - 4;
+    si x > b entonces
+        x := 2 + 3;
     fin
-  sino
-    h := x[5][3][2];
-    pablo := luis;
-  fin
-  si x >= e + t entonces
-    hj := 9 + 8;
-  fin*/
+    si c > b entonces
+        x := 2 % 5;
+    sino
+        dos := dos;
+        si b <= x entonces
+            c := 4 * 5;
+        fin
+    fin
+sino
+    b := x + 100;
 fin
 
-def ent nueva (ent uno, real dos) inicio
-    dreal hg1;
-    real hg2;
-    ent [5]hg3;
+fin
 
-    leer hg2;
+def ent suma(ent one, ent two) inicio
+    ent res;
+    res := one + two;
 fin
