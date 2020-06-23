@@ -141,14 +141,16 @@ void TS_nuevoRegistro(T_Tipos *tablaT, T_Simbolos* tabla, Simbolo* sim){
         tabla->cabeza = sim;
         tabla->num = 1;
         sim->pos = 0;
-        sim->dir = 0;
-        tabla->dirMax = TT_getTam(tablaT, sim->tipo);
+        sim->dir = -1;
+        if (sim->tipo != -1) {sim->dir = 0;}
+        if (strcmp(sim->var,"funcion") != 0){ tabla->dirMax = TT_getTam(tablaT, sim->tipo); }
     } else {
         tabla->cabeza->siguente = sim;
         sim->anterior = tabla->cabeza;
         tabla->cabeza = sim;
-        sim->dir = tabla->dirMax;
-        tabla->dirMax = tabla->dirMax + TT_getTam(tablaT, sim->tipo);
+        sim->dir = -1;
+        if (sim->tipo != -1) {sim->dir = tabla->dirMax;}
+        if (strcmp(sim->var,"funcion") != 0){ tabla->dirMax = tabla->dirMax + TT_getTam(tablaT, sim->tipo); }
         sim->pos = tabla->num;
         tabla->num = tabla->num + 1;
     }

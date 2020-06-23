@@ -57,7 +57,7 @@ arg* crearArg(int tipo){
 void agregarArg(listaArg *la, int tipo){
     if (la->inicio == NULL){
         la->inicio = crearArg(tipo);
-        la->tam ++;
+        la->tam = 1;
     } else {
         arg *Aux = la->inicio;
         while(Aux->siguente != NULL){
@@ -113,7 +113,7 @@ void imprimirLista(listaArg* lista){
 --Fecha de creacion: 31 Mayo 2020
 */
 void imprimirArg(arg *arg){
-    printf(" %d", arg->tipo);
+    if (arg != NULL){ printf(" %d", arg->tipo); }
 }
 
 /*
@@ -131,6 +131,9 @@ int getTamlistaArg(listaArg *la){
 --Descripcion: Compara dos listas de argumentos y regresa 1 para verdadero o 0 para falso
 --Autor: Héctor Montoya Pérez
 --Fecha de creacion: 10 Junio 2020
+--Fecha de modificacion: 23 Junio 2020
+--Autor modificacion:
+--Descripcion de modificacion: Se arreglo la cagada de no iterar
 */
 int compararListasArg(listaArg *l1, listaArg *l2){
     arg *a1,*a2;
@@ -138,6 +141,8 @@ int compararListasArg(listaArg *l1, listaArg *l2){
     a2 = l2->inicio;
     while (a1 != NULL || a2 != NULL) {
         if (a1->tipo != a2->tipo) { return -1; }
+        a1 = a1->siguente;
+        a2 = a2->siguente;
     }
     return 1;
 }

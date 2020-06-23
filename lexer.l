@@ -36,7 +36,7 @@ espacios [ \t\n\r]+
 [eE][sS][cC][rR][iI][bB][iI][rR]          {return ESCRIBIR;}
 [dD][eE][vV][oO][lL][vV][eE][rR]          {return DEVOLVER;}
 [lL][eE][eE][rR]                          {return LEER;}
-[Tt][Ee][Rr][Mm][Nn][Aa][Ll]              {return TERMINAR;}
+[Tt][Ee][Rr][Mm][Ii][Nn][Aa][Rr]          {return TERMINAR;}
 [Cc][Aa][Ss][Oo]                          {return CASO;}
 [Pp][Rr][Ee][dD]                          {return PRED;}
 [oO]                                      {return O;}

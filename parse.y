@@ -34,6 +34,7 @@ char GBLid[20];
   struct {
       struct LISTA_INDICE *nextlist;
       char label[10];
+      char Lfinal[10];
   }sentencias;
 
   struct {
@@ -81,7 +82,7 @@ char GBLid[20];
 %token SI
 %token ENTONCES
 %token MIENTRAS
-%token HACER
+%token <dir> HACER
 %token SEGUN
 %token ESCRIBIR
 %token DEVOLVER
@@ -112,13 +113,13 @@ char GBLid[20];
 %nonassoc PUNTO
 %nonassoc CORDER
 %nonassoc CORIZQ
-%nonassoc LPAR RPAR
+%nonassoc<dir> LPAR RPAR
 %nonassoc SIT
 %nonassoc SINO
 /*No terminales*/
-%type<dir> programa declaraciones tipo_registro lista_var funciones casos predeterminado parametros lista_param A
+%type<dir> programa declaraciones tipo_registro lista_var funciones casos predeterminado A
 %type<base> base tipo_arreglo tipo tipo_arg arg param_arr
-%type<lista> argumentos lista_arg
+%type<lista> argumentos lista_arg parametros lista_param
 %type<variable> variable variable_comp arreglo dato_est_sim
 %type<expresion> expresion
 %type<boleano> e_bool relacional
@@ -203,7 +204,11 @@ funciones : DEF tipo ID {
               yyerror("Ya se declaro la variable");
           }
 
-      } LPAR argumentos RPAR INICIO declaraciones sentencias FIN {
+      } LPAR argumentos RPAR {
+          TS_nuevoRegistro(PilaTT->inicio,PilaTS->inicio,S_nuevo($3,$2,"funcion",$6.lista));
+      } INICIO declaraciones sentencias FIN {
+        printf("%s\n",$11.Lfinal );
+          if (strcmp($11.Lfinal,"") != 0){ agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",$11.Lfinal)); }
           TS_imprimir(PilaTS->cabeza);
           printf("\n");
           TT_imprimir(PilaTT->cabeza);
@@ -233,7 +238,10 @@ tipo_arg : base { baseGBL = $1; } param_arr { $$ = $3; };
 param_arr : CORIZQ CORDER param_arr { $$ = TT_nuevoRegistro(PilaTT->cabeza,T_nuevo("arreglo",2,-1,NULL)); }
 | { $$ = baseGBL; };
 
-sentencias : sentencias sentencia {}
+sentencias : sentencias sentencia {
+    if (strcmp($2.Lfinal,"") == 0) { strcpy($$.Lfinal,$1.Lfinal);
+    } else { strcpy($$.Lfinal,$2.Lfinal); }
+}
 | {
     $$.nextlist = nuevaListaIndice();
     char *tmpE = (char *)malloc(sizeof(char)*10);
@@ -252,6 +260,7 @@ sentencia : SI e_bool ENTONCES sentencias FIN {
       $$.nextlist = combinar($2.falselist,$4.nextlist);
       backpatch(codigo,$$.nextlist,tmpE);
       agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",tmpE));
+      strcpy($$.Lfinal,$4.Lfinal);
 }
 | SI e_bool ENTONCES sentencias {
       char *tmpE1 = (char *)malloc(sizeof(char)*10);
@@ -276,7 +285,15 @@ sentencia : SI e_bool ENTONCES sentencias FIN {
       agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",tmpE2));
 }
 | MIENTRAS e_bool HACER sentencias FIN {}
-| HACER sentencias MIENTRAS e_bool PYC {}
+| HACER sentencias MIENTRAS e_bool PYC {
+    char *tmpE1 = (char *)malloc(sizeof(char)*10);
+    char *tmpE2 = (char *)malloc(sizeof(char)*10);
+    nuevaEtiqueta(tmpE1);
+    strcpy(tmpE2,$2.label);
+    backpatch(codigo,$4.truelist,tmpE2);
+    backpatch(codigo,$4.falselist,tmpE1);
+    agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",tmpE1));
+}
 | SEGUN LPAR variable RPAR HACER casos predeterminado FIN {}
 | variable ASIG expresion PYC {
     char *tmp = (char *)malloc(sizeof(char)*10);
@@ -297,7 +314,12 @@ sentencia : SI e_bool ENTONCES sentencias FIN {
 }
 | DEVOLVER PYC { agregarCuadrupla(codigo,crearCuadrupla("return","-","-","-")); }
 | DEVOLVER expresion PYC {}
-| TERMINAR PYC {}
+| TERMINAR PYC {
+    char *tmpI = (char *)malloc(sizeof(char)*10);
+    nuevaEtiqueta(tmpI);
+    strcpy($$.Lfinal,tmpI);
+    agregarCuadrupla(codigo,crearCuadrupla("GOTO","-","-",tmpI));
+}
 | INICIO sentencias FIN {};
 
 casos : CASO NUM DOSP sentencias casos {}
@@ -306,21 +328,23 @@ casos : CASO NUM DOSP sentencias casos {}
 predeterminado : PRED DOSP sentencias {}
 | {};
 
-e_bool : e_bool O e_bool {
+e_bool : e_bool O {
     char *tmpE = (char *)malloc(sizeof(char)*10);
     nuevaEtiqueta(tmpE);
     backpatch(codigo,$1.falselist,tmpE);
-    $$.truelist = combinar($1.truelist,$3.truelist);
-    $$.falselist = $3.falselist;
     agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",tmpE));
+} e_bool {
+    $$.truelist = combinar($1.truelist,$4.truelist);
+    $$.falselist = $4.falselist;
 }
-| e_bool Y e_bool {
+| e_bool Y {
     char *tmpE = (char *)malloc(sizeof(char)*10);
     nuevaEtiqueta(tmpE);
     backpatch(codigo,$1.truelist,tmpE);
-    $$.truelist = $1.truelist;
-    $$.falselist = combinar($1.falselist,$3.falselist);
     agregarCuadrupla(codigo,crearCuadrupla("Label","-","-",tmpE));
+} e_bool {
+    $$.truelist = $4.truelist;
+    $$.falselist = combinar($1.falselist,$4.falselist);
 }
 | NO e_bool {
     $$.truelist = $2.falselist;
@@ -416,7 +440,7 @@ expresion : expresion SUM_RES expresion {
 | CARACTER {  };
 
 variable : ID {
-    if (existeID(PilaTS->cabeza,$1) != -1) { strcpy(GBLid,$1);
+    if (existeID(PilaTS->cabeza,$1) != -1 || existeID(PilaTS->inicio,$1) != -1) { strcpy(GBLid,$1);
     } else {
         char error[50];
         sprintf(error,"No se ha declarado variable: %s",$1);
@@ -435,6 +459,10 @@ variable : ID {
         strcpy($$.base,$1);
         $$.estructura = 1;
         $$.des = $3.des;
+    } else if ($3.estructura == 2){
+        strcpy($$.dir,$3.dir);
+        $$.tipo = getTipo(PilaTS->cabeza,$1);
+        $$.estructura = 0;
     } else {
         strcpy($$.dir,$1);
         $$.tipo = getTipo(PilaTS->cabeza,$1);
@@ -461,7 +489,21 @@ variable_comp : dato_est_sim {
     $$.estructura = 1;
     strcpy($$.dir,$1.dir);
 }
-| LPAR parametros RPAR {};
+| LPAR {strcpy($1,GBLid);} parametros RPAR {
+    char *tmp = (char *)malloc(sizeof(char)*10);
+    char *tmp2 = (char *)malloc(sizeof(char)*10);
+    strcpy(tmp,$1);
+    nuevaTemp(tmp2);
+    strcpy($$.dir,tmp2);
+    $$.estructura = 2;
+    if (strcmp(getVar_TS(PilaTS->inicio,tmp),"funcion") == 0) {
+        listaArg *lista = getArgs(PilaTS->inicio,tmp);
+        int num = lista->tam;
+        if (num != $3.num) { yyerror("El numero de parametros no coinciden con la funcion"); }
+        if (compararListasArg(lista,$3.lista) == -1) { yyerror("El numero de parametros no coinciden con la funcion"); }
+    } else { yyerror("La variable no es una funcion"); }
+    agregarCuadrupla(codigo,crearCuadrupla("CALL",tmp,"-",tmp2));
+};
 
 dato_est_sim : dato_est_sim PUNTO ID {
       if ($1.code_estructura == 1) {
@@ -536,11 +578,25 @@ arreglo : CORIZQ expresion CORDER {
   } else { yyerror("La variable asociada no es de tipo arreglo"); }
 };
 
-parametros : lista_param {}
-| {};
+parametros : lista_param {
+    $$.lista = $1.lista;
+    $$.num = $1.num;
+}
+| {
+    $$.lista = NULL;
+    $$.num = 0;
+};
 
-lista_param : lista_param COMA expresion {}
-| expresion {};
+lista_param : lista_param COMA expresion {
+      $$.lista = $1.lista;
+      agregarArg($$.lista,$3.tipo);
+      $$.num = $$.num + 1;
+}
+| expresion {
+      $$.lista = crearListaArg();
+      agregarArg($$.lista,$1.tipo);
+      $$.num = 1;
+};
 
 %%
 /*

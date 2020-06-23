@@ -72,7 +72,6 @@ void eliminarListaIndice(listaIndice *lista){
     if (lista != NULL){
         eliminarIndice(lista->inicio);
         free(lista);
-        lista = NULL;
     }
 }
 
@@ -123,9 +122,13 @@ listaIndice* combinar(listaIndice *lista1, listaIndice *lista2){
     if (lista1 == NULL && lista2 == NULL) { return NULL; }
     if (lista1 == NULL) { return lista2; }
     if (lista2 == NULL) { return lista1; }
-    Indice *indice = lista2->inicio;
-    lista1->final->siguente = lista2->inicio;
-    lista1->final = lista2->final;
+    if (lista1->final == NULL){
+        lista1->inicio = lista2->inicio;
+        lista1->final = lista2->final;
+    } else {
+        lista1->final->siguente = lista2->inicio;
+        lista1->final = lista2->final;
+    }
     lista2->inicio = NULL;
     eliminarListaIndice(lista2);
     return lista1;

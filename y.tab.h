@@ -55,6 +55,7 @@ typedef union{
   struct {
       struct LISTA_INDICE *nextlist;
       char label[10];
+      char Lfinal[10];
   }sentencias;
 
   struct {
